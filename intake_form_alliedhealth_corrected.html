@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Yoonet Allied Health Onboarding</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* --brand:#8A9EFF;
+      --accent:#FA6492;
+      --text:#707598;
+      --bg:#F6F7FB;
+      --panel:#fff;
+      --border:#E6E8EF; */
+        /* Brand */
+      --brand: #8A9EFF;         /* headings, focus */
+      --accent: #FA6492;        /* primary actions */
+      --text: #7d728a;          /* body copy */
+      --text-strong:#4B5165;    /* stronger body */
+      --muted:#9BA1B4;          /* helper text */
+      --border:#E6E8EF;
+      --neutral: #E3E8EF;  
+        
+      /* Surfaces */
+      --bg:#F6F7FB;             /* app background */
+      --panel:#FFFFFF;          /* cards/panels */
+      --panel-border:#E8EBF4;
+        
+      /* Misc */
+      --radius: 18px;
+      --shadow-sm: 0 6px 18px rgba(31,41,55,.08);
+      --shadow-md: 0 10px 30px rgba(31,41,55,.12);
+    }
+    *{box-sizing:border-box}
+    body{margin:0; background:var(--bg); font-family:Lato,sans-serif; color:#333;}
+
+    header{padding:16px 24px; background:var(--panel); border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;}
+
+    .header-nav{display:flex; align-items:center; gap:16px;}
+
+    .form-switch{
+      color: var(--brand);
+      font-size:14px;
+      text-decoration:none;
+      padding:10px 18px; /* increased padding */
+      border:1px solid var(--brand);
+      border-radius:10px;
+      font-family: Dosis, sans-serif; /* use Dosis for matching style */
+      background: #fff;
+      transition:all 0.12s ease;
+  box-shadow: none;
+    }
+
+    .form-switch:hover{ color:var(--brand); background: rgba(138,158,255,0.06); transform: translateY(-1px);} 
+
+    .brand{font-family:Dosis; font-size:20px; font-weight:700; color:var(--brand);}
+
+    #progress{font-size:16px; color:var(--muted);margin-bottom: 10px;}
+
+    .layout{display:grid; grid-template-columns:2fr 1fr; gap:24px; max-width:1100px; margin:24px auto; padding:0 16px;}
+
+  .card{background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:24px; box-shadow:none;}
+
+  h2{font-family:Dosis; color:var(--accent); margin-top:0;}
+
+    .options label{display:block; padding:10px; border:1px solid var(--border); border-radius:12px; margin:6px 0; cursor:pointer; color: var(--text);}
+
+    input[type=text],input[type=email],input[type=tel],textarea{
+      font-family: Lato, sans-serif; /* ensure textarea matches other inputs */
+      font-size:16px;
+      line-height:1.45;
+      color: var(--text);
+      width:100%;
+      padding:12px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      margin:8px 0;
+    }
+    
+    /* Placeholder color (cross-browser) */
+    ::-webkit-input-placeholder { color: var(--muted); }
+    :-ms-input-placeholder { color: var(--muted); }
+    ::-ms-input-placeholder { color: var(--muted); }
+    ::placeholder { color: var(--muted); }
+
+    input[type=text]:focus, input[type=email]:focus,
+    input[type=tel]:focus, textarea:focus{
+      outline:none;
+      border-color:var(--brand);
+  box-shadow:none
+    }
+
+    textarea{resize:vertical; min-height:90px;}
+
+    .ghost{background:#fff; border:1px solid var(--border);}
+
+    .nav{margin-top:16px; display:flex; justify-content:space-between;}
+
+    .hidden{display:none;}
+
+    .error{color:#d00; font-size:16px;}
+
+    #summary h3{font-family:Dosis; color:var(--brand);}
+
+    #summary {padding-left:20px; color:var(--text); font-size:16px;}
+
+    #summaryList{display:grid !important;grid-template-columns:1fr;gap:10px; color:var(--text); font-size:16px;}
+
+    #summaryItem{
+      background:#FFF;
+      border:1px solid var(--border);
+      padding:10px 12px;
+      border-radius:5px;
+      color: var(--text);
+    }
+
+    small{color:var(--muted)}
+
+    .btn{
+    border:1px solid var(--panel-border);
+    padding:12px 18px;
+    border-radius:12px;
+    background:var(--neutral);
+    color:var(--text-strong);
+    cursor:pointer;
+    font-weight:700;
+    transition:transform .08s ease, box-shadow .2s ease, background .2s ease;
+    font-family: Dosis;
+    min-width: 120px;
+    font-size: 16px;
+    }
+  .btn:hover{box-shadow:none}
+    .btn:active{transform:translateY(1px)}
+    .btn:disabled{opacity:.6;cursor:not-allowed}
+
+    .btn.primary{
+    border:none;
+    color:#fff;
+    background:
+    linear-gradient(180deg, var(--brand), var(--brand));
+    }
+  .btn.primary:hover{box-shadow:none}
+    
+
+    /* Checkbox styling: use accent-color where supported; provide size and fallback appearance
+       so the check icon appears white on checked states */
+    .options input[type="checkbox"]{
+      margin-right:8px;
+      width:20px;
+      height:20px;
+      vertical-align:middle;
+      accent-color: var(--brand);
+      /* fallback for browsers where accent-color isn't applied uniformly */
+  -webkit-appearance: auto;
+  appearance: auto;
+    }
+    /* For browsers that support appearance:none on checkboxes, show a solid brand background and white checkmark */
+    .options input[type="checkbox"].custom-appearance{
+      -webkit-appearance: none;
+      appearance: none;
+      width:20px;
+      height:20px;
+      border:1px solid var(--border);
+      border-radius:6px;
+      background: #fff;
+      display:inline-block;
+      position:relative;
+    }
+    .options input[type="checkbox"].custom-appearance:checked{ background:var(--brand); border-color:var(--brand); }
+    .options input[type="checkbox"].custom-appearance:checked::after{
+      content: "\2713"; /* checkmark */
+      color: #fff;
+      position: absolute;
+      left: 3px;
+      top: 0px;
+      font-size: 16px;
+      line-height: 20px;
+      font-weight:700;
+    }
+
+    /* Radios: adopt checkbox visual treatment for consistency */
+    .options input[type="radio"].custom-appearance{
+      -webkit-appearance:none;
+      appearance:none;
+      width:18px;
+      height:18px;
+      border:1px solid var(--border); /* keep var border color */
+      border-radius:50%;
+      background:#fff;
+      display:inline-block;
+      position:relative;
+      vertical-align: middle;
+    }
+    /* When checked, fill with brand but keep the border color consistent */
+    .options input[type="radio"].custom-appearance:checked{
+      background:var(--brand);
+      /* keep border color as var(--border) per request */
+      border-color: var(--border);
+    }
+    /* inner dot: brand-colored center with a white ring, outer border remains var(--border) */
+    .options input[type="radio"].custom-appearance:checked::after{
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--brand); /* inner dot */
+      box-shadow: 0 0 0 4px #fff; /* white ring around the dot */
+    }
+
+    /* Selected support/option styling */
+    .options label.selected, .support-section.selected{ border-color: var(--brand); background: #D0D8FF1A; }
+
+    #overlayContent {
+      animation: fadeIn 0.3s ease forwards;
+      border-right: 5px solid var(--brand);
+      border-bottom: 5px solid var(--brand);
+    }
+
+    /* Accent highlight for dynamic values */
+    .accent { color: var(--accent); font-weight:700; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 860px){
+    .layout{grid-template-columns:1fr}
+    .aside{border-left:none;border-top:1px solid var(--muted)}
+    }
+
+    .hidden{
+      display: none !important;
+    }
+    
+    .thankYouMsg{
+      color: var(--text);
+    }
+
+    .thankyou-header {
+  background: #8A9EFF;
+  color: #fff;
+  padding: 16px;
+  border-radius: 12px 12px 0 0;
+  text-align: center;
+}
+.thankyou-body {
+  text-align: center;
+  padding: 24px;
+}
+.thankyou-img {
+  max-width: 150px;
+  margin: 16px auto;
+  display: block;
+}
+.thankyou-steps {
+  text-align: left;
+  max-width: 500px;
+  margin: 20px auto;
+  padding-left: 20px;
+  font-size: 16px;
+  color: #707598;
+}
+.thankyou-steps li {
+  margin: 12px 0;
+}
+    /* Final screen redesign */
+    .final-outer{
+      display:flex;align-items:center;justify-content:center;padding:40px 0;
+    }
+    .final-card{
+      background:var(--panel);border-radius:14px;max-width:920px;width:100%;text-align:center;
+    }
+    .final-icon{width:72px;height:72px;border-radius:50%;background:var(--brand);margin:0 auto 18px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:28px}
+    .final-title{font-family:Dosis;color:var(--text-strong);font-size:22px;margin:8px 0 24px}
+    .final-title .final-biz{color:var(--brand);font-weight:700}
+    .final-steps{background:#F0F4FF;border-radius:12px;padding:22px;margin:0 auto;max-width:740px;text-align:left;color:var(--text);}
+    .final-steps h3{color:var(--brand);margin:0 0 10px}
+    .final-steps ol{margin:8px 0 0;padding-left:18px}
+    .final-steps li{margin:10px 0}
+  /* Final call-to-action spacing and link reset */
+  .final-steps{margin-bottom:18px}
+  .final-cta{ text-align:center; padding:18px 0 28px; }
+  a.btn{ text-decoration:none; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">Yoonet · Allied Health Intake</div>
+    <div class="header-nav">
+      <a href="#" class="form-switch" onclick="window.top.location.replace('general_intake_form.html'); return false;">Not Allied Health Business?</a>
+    </div>
+  </header>
+  <div id="overlay" class="hidden" style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:1000;">
+  <div id="overlayContent" style="background:#fff;padding:24px 32px;border-radius:16px;max-width:400px;text-align:center;">
+    <p id="overlayMsg" style="margin:0;font-family:Dosis;color:#8A9EFF;font-size:18px;"></p>
+  </div>
+  </div>
+  <div class="layout">
+    <section class="card">
+      <div id="progress">Step 1 of 10</div>
+      <!-- Screens -->
+      <div class="screen" id="s1">
+        <h2>Thanks for your interest in Yoonet! What's your name?</h2>
+        <input id="name" type="text" placeholder="Full name">
+        <div class="nav"><span></span><button class="btn primary" onclick="goName()">Continue</button></div>
+      </div>
+      <div class="screen hidden" id="s2">
+        <h2>What's your clinic's name?</h2>
+        <input id="businessName" type="text" placeholder="Clinic name">
+        <div class="nav"><button class="btn ghost" onclick="back()">Back</button><button class="btn primary" onclick="goBusiness()">Continue</button></div>
+      </div>
+      <div class="screen hidden" id="s3">
+        <h2>What is the main clinical focus of your practice?</h2>
+        <div id="modalityOptions" class="options"></div>
+        <div id="multiModalWrap" class="hidden"><p>Select all that apply:</p><div id="multiModalOptions" class="options"></div></div>
+        <div id="otherModalityWrap" class="hidden"><input id="otherModality" type="text" placeholder="Please specify"></div>
+        <div class="nav"><button class="btn ghost" onclick="back()">Back</button><button class="btn primary" onclick="goModality()">Continue</button></div>
+      </div>
+      <div class="screen hidden" id="s4">
+        <h2>How many practitioners work in your business?</h2>
+        <div id="sizeOptions" class="options"></div>
+        <div class="nav"><button class="btn ghost" onclick="back()">Back</button><button class="btn primary" onclick="goSize()">Continue</button></div>
+      </div>
+      <div class="screen hidden" id="s5">
+        <h2>How many full-time equivalents in administration support do you currently have?</h2>
+        <div id="adminOptions" class="options"></div>
+        <div class="nav"><button class="btn ghost" onclick="back()">Back</button><button class="btn primary" onclick="goAdminSupport()">Continue</button></div>
+      </div>
+      <div class="screen hidden" id="s6">
+        <h2>Where are you hoping we can help <span id="biz1"></span>?</h2>
+        <div id="needsOptions" class="options"></div>
+        <div id="otherNeedWrap" class="hidden"><input id="otherNeed" type="text" placeholder="Please describe"></div>
+        <div class="nav"><button class="btn ghost" onclick="back()">Back</button><button class="btn primary" onclick="goNeeds()">Continue</button></div>
+      </div>
+      <div class="screen hidden" id="s7">
+        <h2>Which practice management system does your clinic use?</h2>
+        <div id="systemOptions" class="options"></div>
+        <div id="otherSystemWrap" class="hidden"><input id="otherSystem" type="text" placeholder="Please specify"></div>
+        <div class="nav"><button class="btn ghost" onclick="back()">Back</button><button class="btn primary" onclick="goSystem()">Continue</button></div>
+      </div>
+      <div class="screen hidden" id="s8">
+        <h2>When does <span id="biz2"></span> need support in place?</h2>
+        <div id="urgencyOptions" class="options"></div>
+        <div class="nav"><button class="btn ghost" onclick="back()">Back</button><button class="btn primary" onclick="goUrgency()">Continue</button></div>
+      </div>
+      <div class="screen hidden" id="s9">
+        <h2>Is there anything else you'd like us to know about <span id="biz3"></span>?</h2>
+        <textarea id="anythingElse"></textarea>
+        <div class="nav"><button class="btn ghost" onclick="back()">Back</button><button class="btn primary" onclick="goAnything()">Continue</button></div>
+      </div>
+      <div class="screen hidden" id="s10">
+        <h2>We will come back to you via email with more information soon.</h2>
+        <input id="email" type="email" placeholder="Email">
+        <div id="emailErr" class="error"></div>
+        <input id="phone" type="tel" placeholder="Phone (optional)">
+        <div class="nav"><button class="btn ghost" onclick="back()">Back</button><button class="btn primary" onclick="submitForm()">Submit</button></div>
+      </div>
+      <div class="screen hidden" id="final">
+        <div class="final-outer">
+          <div class="final-card">
+            <div class="final-icon" aria-hidden="true"><span>✓</span></div>
+            <h2 class="final-title">We're excited about the opportunity to support <span class="final-biz"></span></h2>
+
+            <div class="final-steps">
+              <h3>Here’s what happen next</h3>
+              <ol>
+                <li><strong>Within 1 business day:</strong> Our specialist will review your needs</li>
+                <li><strong>Tailored proposal:</strong> You'll receive a custom solution for <span class="final-biz"></span></li>
+                <li><strong>No obligation:</strong> Review our proposal with no pressure to proceed</li>
+              </ol>
+            </div>
+            <div class="final-cta"> 
+              <a class="btn primary" href="https://www.yoonet.io/">Visit Our Website</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <aside class="card" id="summary">
+      <h3>Lead Summary</h3>
+      <div id="summaryList"><div id="summaryItem">Waiting for input…</div></div>
+    </aside>
+  </div>
+
+<script>
+const route=[1,2,3,4,5,6,7,8,9,10]; let current=1; let historyStack=[1];
+const state={name:'',businessName:'',modality:'',multiModalities:[],practiceSize:'',adminSupport:'',adminNeeds:[],practiceSystem:'',urgency:'',anythingElse:'',email:'',phone:''};
+function escapeHtml(str){ return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function showScreen(n){document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));document.getElementById('s'+n).classList.remove('hidden');current=n;updateProgress(n);refreshSummary();}
+function updateProgress(n){const idx=route.indexOf(n);document.getElementById('progress').textContent=`Step ${idx+1} of ${route.length}`;}
+function next(n){historyStack.push(n);showScreen(n);}function back(){if(historyStack.length>1){historyStack.pop();showScreen(historyStack.at(-1));}}
+
+function refreshSummary(){
+  const s=state;const items=[];const kv=document.getElementById('summaryList');
+  if(s.name)items.push(["Name: ", s.name]);
+  if(s.businessName)items.push(["Clinic: ", s.businessName]);
+  if(s.modality)items.push(["Modality: ", s.modality+(s.multiModalities.length?" ("+s.multiModalities.join(", ")+")":"")]);
+  if(s.practiceSize)items.push(["Size: ", s.practiceSize]);
+  if(s.adminSupport)items.push(["Admin Support: ", s.adminSupport]);
+  if(s.adminNeeds.length)items.push(["Needs: ", s.adminNeeds.join(", ")]);
+  if(s.practiceSystem)items.push(["System: ", s.practiceSystem]);
+  if(s.urgency)items.push(["Urgency: ", s.urgency]);
+  if(s.anythingElse)items.push(["Notes: ", s.anythingElse]);
+  if(s.email)items.push(["Email: ", s.email]);
+  if(s.phone)items.push(["Phone: ", s.phone]);
+  kv.innerHTML=items.length?items.map(([k,v])=>`<div id="summaryItem" ><small>${k}</small><br>${escapeHtml(String(v))}</div>`).join(''):"<div id='summaryItem'>Waiting for input…</div>";
+  // Ensure any business name placeholders are updated with accent styling
+  updateBusinessNameRefs();
+}
+  // kv.innerHTML=items.length?items.map(i=>`<div id="summaryitem">${i}</div>`).join(""):"<div id='summaryitem'>Waiting for input…</div>";}
+
+// Step 1
+// function goName(){const v=document.getElementById('name').value.trim();if(!v)return;state.name=v;next(2);}
+function goName(){
+  const v=document.getElementById('name').value.trim();
+  if(!v) return;
+  state.name=v;
+  const first=v.split(" ")[0]||v;
+  // highlight the user's first name in the overlay using the accent marker
+  overlaySay(`Nice to meet you, {{accent:${first}}}! \nLet’s get to know your clinic.`, ()=>next(2));
+}
+// Step 2
+// function goBusiness(){const v=document.getElementById('businessName').value.trim();if(!v)return;state.businessName=v;next(3);refreshSummary();}
+function goBusiness(){
+  const v=document.getElementById('businessName').value.trim();
+  if(!v) return;
+  state.businessName=v;
+  // highlight the clinic name in the overlay using the accent marker
+  overlaySay(`Great — we’ll tailor Yoonet to {{accent:${v}}}.`, ()=>next(3));
+  refreshSummary();
+}
+// Step 3
+const modalities=["Physiotherapy","Podiatry","Psychology","Occupational Therapy","Speech Pathology","Dietetics","Exercise Physiology","Chiropractic","Osteopathy","Multiple modalities","Other"];
+function buildRadios(container,opts,name){
+  const c=document.getElementById(container);
+  c.innerHTML='';
+  opts.forEach(o=>{c.innerHTML+=`<label><input type="radio" name="${name}" value="${o}"> ${o}</label>`;});
+}
+function buildChecks(container,opts){
+  const c=document.getElementById(container);
+  c.innerHTML='';
+  opts.forEach(o=>{c.innerHTML+=`<label><input type="checkbox" value="${o}"> ${o}</label>`;});
+}
+buildRadios('modalityOptions',modalities,'modality');
+buildChecks('multiModalOptions',modalities.filter(m=>!["Multiple modalities","Other"].includes(m)));
+// Build radios with immediate toggle
+function setupModality(){
+  buildRadios('modalityOptions', modalities, 'modality');
+  document.getElementById('modalityOptions').addEventListener('change', e=>{
+    const val = e.target.value;
+    document.getElementById('multiModalWrap').classList.add('hidden');
+    document.getElementById('otherModalityWrap').classList.add('hidden');
+
+    if(val === "Multiple modalities"){
+      document.getElementById('multiModalWrap').classList.remove('hidden');
+    } else {
+      // If switching away from Multiple modalities, clear any previous multi selections
+      state.multiModalities = [];
+      // Uncheck all checkboxes in the multi modal options and remove .selected from labels
+      document.querySelectorAll('#multiModalOptions input[type="checkbox"]').forEach(cb => {
+        cb.checked = false;
+        const lab = cb.closest('label') || cb.parentElement;
+        if(lab) lab.classList.remove('selected');
+      });
+      // Ensure the multi modal wrap is hidden
+      document.getElementById('multiModalWrap').classList.add('hidden');
+      // Refresh summary to remove stale entries
+      refreshSummary();
+    }
+    if(val === "Other"){
+      document.getElementById('otherModalityWrap').classList.remove('hidden');
+    }
+  });
+}
+setupModality();
+
+function goModality(){
+  const val=document.querySelector('#modalityOptions input:checked')?.value;
+  if(val==="Multiple modalities"){
+    const picks=[...document.querySelectorAll('#multiModalOptions input:checked')].map(i=>i.value);
+    if(!picks.length) return;
+    state.modality="Multiple modalities"; state.multiModalities=picks; next(4);
+  } else if(val==="Other"){
+    const other=document.getElementById('otherModality').value.trim();
+    if(!other){
+      document.getElementById('otherModality').style.borderColor='#d00';
+      return;
+    }
+    state.modality=other;
+    document.getElementById('otherModality').style.borderColor='';
+    next(4);
+  } else if(val){ state.modality=val; next(4); }
+}
+// Step 4
+const sizes=["Solo practitioner","2-3 practitioners","4-6 practitioners","7-10 practitioners","More than 10 practitioners"];buildRadios('sizeOptions',sizes,'size');
+function goSize(){
+  const v=document.querySelector('#sizeOptions input:checked')?.value;
+  if(!v)return;state.practiceSize=v;
+  next(5);
+}
+// Step 5
+const admins=["None at all","Less than 1 full-time","1 full-time","2-3 full-time","4+ full-time"];buildRadios('adminOptions',admins,'admin');
+function goAdminSupport(){
+  const v=document.querySelector('#adminOptions input:checked')?.value;
+  if(!v)return;state.adminSupport=v;
+  next(6);
+}
+// Step 6
+const needs=["Appointment scheduling, confirmations and rescheduling","Insurance/NDIS/Medicare claims processing","Patient recalls and follow-ups","Report writing and documentation","Reception phone coverage","After-hours enquiries","Data entry and file management","Billing and invoicing","Referral management","New patient onboarding","Other"];
+buildChecks('needsOptions',needs);
+function setupNeeds(){
+  buildChecks('needsOptions', needs);
+  document.getElementById('needsOptions').addEventListener('change', ()=>{
+    const checked = [...document.querySelectorAll('#needsOptions input:checked')].map(i=>i.value);
+    document.getElementById('otherNeedWrap').classList.toggle('hidden', !checked.includes("Other"));
+  });
+}
+setupNeeds();
+function goNeeds(){
+  let vals=[...document.querySelectorAll('#needsOptions input:checked')].map(i=>i.value);
+  if(vals.includes("Other")){
+    document.getElementById('otherNeedWrap').classList.remove('hidden');
+    const other=document.getElementById('otherNeed').value.trim();
+    if(!other){
+      document.getElementById('otherNeed').style.borderColor='#d00';
+      return;
+    }else{
+      vals=vals.filter(v=>v!=="Other");
+      vals.push(other);
+      document.getElementById('otherNeed').style.borderColor='';
+    }
+  }if(!vals.length)return;
+  state.adminNeeds=vals;
+  next(7);
+}
+// Step 7
+const systems=["Cliniko","Nookal","Power Diary","Halaxy","CorePlus","Front Desk","TM3","Best Practice","Medical Director","No system currently","Other"];buildRadios('systemOptions',systems,'system');
+function setupSystem(){
+  buildRadios('systemOptions', systems, 'system');
+  document.getElementById('systemOptions').addEventListener('change', e=>{
+    const val = e.target.value;
+    document.getElementById('otherSystemWrap').classList.toggle('hidden', val!=="Other");
+  });
+}
+setupSystem();
+function goSystem(){
+  let val=document.querySelector('#systemOptions input:checked')?.value;
+  if(val==="Other"){
+    document.getElementById('otherSystemWrap').classList.remove('hidden');
+    const other=document.getElementById('otherSystem').value.trim();
+    if(!other){
+      document.getElementById('otherSystem').style.borderColor='#d00';
+      return;
+    }
+    state.practiceSystem=other;
+    document.getElementById('otherSystem').style.borderColor='';
+  }else if(val){
+    state.practiceSystem=val;
+  }else return;
+
+  // Update business name in step 8
+  document.getElementById('biz2').textContent = state.businessName;
+  next(8);}
+// Step 8
+const urgency=["Within 2 weeks","Within a month","Next 1-3 months","Just planning ahead"];
+buildRadios('urgencyOptions',urgency,'urgency');
+function goUrgency(){const v=document.querySelector('#urgencyOptions input:checked')?.value;
+if(!v)return;state.urgency=v;
+next(9);
+}
+// Step 9
+function goAnything(){
+  state.anythingElse=document.getElementById('anythingElse').value.trim();
+  next(10);
+}
+// Step 10 Submit
+const BUBBLE_ENDPOINT="https://app.yoonet.io/version-42oea/api/1.1/wf/intake_form_submitted/";
+async function submitForm(){const email=document.getElementById('email').value.trim();const phone=document.getElementById('phone').value.trim();if(!/^[^@]+@[^@]+\.[^@]+$/.test(email)){document.getElementById('emailErr').textContent="Please enter a valid email.";return;}state.email=email;state.phone=phone;try{await fetch(BUBBLE_ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(state)});}catch(e){console.error(e);}showFinal();}
+// Final
+// function showFinal(){document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));document.getElementById('final').classList.remove('hidden');const first=state.name.split(" ")[0]||"there";document.getElementById('thankYouHeader').textContent=`Thank you, ${first}!`;document.getElementById('thankYouMsg').innerHTML=`We're excited to support ${state.businessName}.<br><br>1. <b>Within 1 business day:</b> Our specialist will review your needs<br>2. <b>Tailored proposal:</b> You'll receive a custom solution<br>3. <b>No obligation:</b> Review with no pressure to proceed`;refreshSummary();}
+function showFinal(){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));
+  document.getElementById('final').classList.remove('hidden');
+  const biz = state.businessName || 'your clinic';
+  const safeBiz = escapeHtml(biz);
+  // populate all final-biz placeholders
+  document.querySelectorAll('.final-biz').forEach(el => el.textContent = biz === 'your clinic' ? safeBiz : safeBiz);
+  // also set legacy thank you header for accessibility
+  const first=state.name.split(" ")[0]||"there";
+  const headerEl = document.getElementById('thankYouHeader');
+  if(headerEl) headerEl.textContent = `Thank you, ${first}!`;
+
+  // hide the progress indicator while on the final screen
+  const prog = document.getElementById('progress');
+  if(prog) prog.style.display = 'none';
+}
+
+// Update business name spans to include accent styling (safe)
+function updateBusinessNameRefs(){
+  const biz = state.businessName || '';
+  const safe = escapeHtml(biz);
+  const wrapped = safe ? `<span class=\"accent\">${safe}</span>` : '';
+  document.querySelectorAll('#biz1, #biz2, #biz3, .final-biz').forEach(el => {
+    el.innerHTML = wrapped || '';
+  });
+}
+
+showScreen(1);
+// Ensure option inputs are enhanced after initial render
+enhanceOptionInputs();
+
+let overlayTimer = null;
+function overlaySay(msg, nextStep){
+  const overlay = document.getElementById('overlay');
+  const overlayEl = document.getElementById('overlayMsg');
+  // Support markers like {{accent:...}} to render accent-wrapped safe spans
+  let processed = String(msg);
+  processed = processed.replace(/\{\{accent:(.*?)\}\}/g, (m,p1)=>`<span class=\"accent\">${escapeHtml(p1)}</span>`);
+  // Escape remaining text
+  let escaped = escapeHtml(processed);
+  // Restore our accent spans (they were injected before escaping)
+  escaped = escaped.replace(/&lt;span class=\"accent\"&gt;(.*?)&lt;\/span&gt;/g, '<span class="accent">$1</span>');
+  // Allow line breaks: restore any literal <br> and convert newline characters into <br>
+  escaped = escaped.replace(/&lt;br\s*\/?&gt;/g, '<br>').replace(/\n/g, '<br>');
+  overlayEl.innerHTML = escaped;
+  overlay.classList.remove('hidden');
+
+  if(overlayTimer) clearTimeout(overlayTimer);
+  overlayTimer = setTimeout(()=>{
+    overlay.classList.add('hidden');
+    if(nextStep) nextStep();
+  }, 2500);
+}
+
+// Add custom-appearance class to any generated checkboxes and wire change handlers to toggle .selected
+function enhanceOptionInputs(){
+  // checkboxes
+  document.querySelectorAll('.options input[type="checkbox"]').forEach(cb => {
+    cb.classList.add('custom-appearance');
+    cb.addEventListener('change', ()=>{
+      const label = cb.closest('label') || cb.parentElement;
+      if(label) label.classList.toggle('selected', cb.checked);
+      // also toggle .selected on any .support-section container
+      const section = cb.closest('.support-section');
+      if(section) section.classList.toggle('selected', cb.checked);
+    });
+  });
+  // radios - highlight selected label
+  document.querySelectorAll('.options input[type="radio"]').forEach(r=>{
+    r.classList.add('custom-appearance');
+    r.addEventListener('change', ()=>{
+      const name = r.name;
+      document.querySelectorAll(`.options input[name="${name}"]`).forEach(inp=>{
+        const lab = inp.closest('label') || inp.parentElement;
+        if(lab) lab.classList.toggle('selected', inp.checked);
+      });
+      // Also toggle selected on nearest support-section if present
+      const section = r.closest('.support-section');
+      if(section){
+        // when any radio inside the section becomes checked, mark the section selected
+        const anyChecked = !!section.querySelector('input[type="radio"]:checked');
+        section.classList.toggle('selected', anyChecked);
+      }
+    });
+  });
+}
+
+// run once to enhance inputs created during initial build
+setTimeout(enhanceOptionInputs, 20);
+
+</script>
+</body>
+</html>

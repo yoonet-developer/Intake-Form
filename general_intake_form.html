@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Yoonet General Intake</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Brand */
+      --brand: #8A9EFF;         /* headings, focus */
+      --accent: #FA6492;        /* primary actions */
+      --text: #7d728a;          /* body copy */
+      --text-strong:#4B5165;    /* stronger body */
+      --muted:#9BA1B4;          /* helper text */
+      --border:#E6E8EF;
+      --neutral: #E3E8EF;  
+      /* Surfaces */
+      --bg:#F6F7FB;             /* app background */
+      --panel:#FFFFFF;          /* cards/panels */
+      --panel-border:#E8EBF4;
+
+      /* Misc */
+      --radius: 18px;
+      --shadow-sm: 0 6px 18px rgba(31,41,55,.08);
+      --shadow-md: 0 10px 30px rgba(31,41,55,.12);
+    }
+    *{box-sizing:border-box}
+    body{margin:0; background:var(--bg); font-family:Lato,sans-serif; color:#333;}
+
+    header{padding:16px 24px; background:var(--panel); border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;}
+
+    .header-nav{display:flex; align-items:center; gap:16px;}
+
+    .form-switch{
+      color: var(--brand);
+      font-size:14px;
+      text-decoration:none;
+      padding:10px 18px; /* increased padding */
+      border:1px solid var(--brand);
+      border-radius:10px;
+      font-family: Dosis, sans-serif; /* use Dosis for matching style */
+      background: #fff;
+      transition:all 0.12s ease;
+  box-shadow: none;
+    }
+
+    .form-switch:hover{ color:var(--brand); background: rgba(138,158,255,0.06); transform: translateY(-1px);} 
+
+    .brand{font-family:Dosis; font-size:20px; font-weight:700; color:var(--brand);}
+
+    #progress{font-size:16px; color:var(--muted);margin-bottom: 10px;}
+
+    .layout{display:grid; grid-template-columns:2fr 1fr; gap:24px; max-width:1100px; margin:24px auto; padding:0 16px;}
+
+  .card{background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:24px; box-shadow:none;}
+
+    h2{font-family:Dosis; color:var(--accent); margin-top:0;}
+
+    .support-section{display:block; padding:12px; border:1px solid var(--border); border-radius:12px; margin:6px 0; cursor:pointer; color: var(--text); position: relative;}
+
+    .options label:hover{background:#f9f9ff;}
+
+    /* Checkbox styling: use accent-color where supported; provide size and fallback appearance
+       so the check icon appears white on checked states */
+    .options input[type="checkbox"]{
+      margin-right:8px;
+      width:20px;
+      height:20px;
+      vertical-align:middle;
+      accent-color: var(--brand);
+      /* fallback for browsers where accent-color isn't applied uniformly */
+  -webkit-appearance: auto;
+  appearance: auto;
+    }
+    /* For browsers that support appearance:none on checkboxes, show a solid brand background and white checkmark */
+    .options input[type="checkbox"].custom-appearance{
+      -webkit-appearance: none;
+      appearance: none;
+      width:20px;
+      height:20px;
+      border:1px solid var(--border);
+      border-radius:6px;
+      background: #fff;
+      display:inline-block;
+      position:relative;
+    }
+    .options input[type="checkbox"].custom-appearance:checked{ background:var(--brand); border-color:var(--brand); }
+    .options input[type="checkbox"].custom-appearance:checked::after{
+      content: "\2713"; /* checkmark */
+      color: #fff;
+      position: absolute;
+      left: 3px;
+      top: 0px;
+      font-size: 16px;
+      line-height: 20px;
+      font-weight:700;
+    }
+
+    /* Selected support section styling */
+    .support-section.selected{ border-color: var(--brand); background: #D0D8FF1A; }
+
+    input[type=text],input[type=email],input[type=tel],textarea{
+      font-family: Lato, sans-serif;
+      font-size:16px;
+      line-height:1.45;
+      color: var(--text);
+      width:100%;
+      padding:12px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      margin:8px 0;
+    }
+
+    /* Placeholder color (cross-browser) */
+    ::-webkit-input-placeholder { color: var(--muted); }
+    :-ms-input-placeholder { color: var(--muted); }
+    ::-ms-input-placeholder { color: var(--muted); }
+    ::placeholder { color: var(--muted); }
+
+    input[type=text]:focus, input[type=email]:focus,
+    input[type=tel]:focus, textarea:focus{
+      outline:none;
+      border-color:var(--brand);
+  box-shadow:none
+    }
+
+    textarea{resize:vertical; min-height:120px;}
+
+    .ghost{background:#fff; border:1px solid var(--border);}
+
+    .nav{margin-top:16px; display:flex; justify-content:space-between;}
+
+    .hidden{display:none;}
+
+    .error{color:#d00; font-size:16px;}
+
+    #summary h3{font-family:Dosis; color:var(--brand);}
+
+    #summary {padding-left:20px; color:var(--text); font-size:16px;}
+
+    #summaryList{display:grid !important;grid-template-columns:1fr;gap:10px; color:var(--text); font-size:16px;}
+
+    #summaryItem{
+      background:#FFF;
+      border:1px solid var(--border);
+      padding:10px 12px;
+      border-radius:5px;
+      color: var(--text);
+    }
+
+    small{color:var(--muted)}
+
+    .btn{
+    border:1px solid var(--panel-border);
+    padding:12px 18px;
+    border-radius:12px;
+    background:var(--neutral);
+    color:var(--text-strong);
+    cursor:pointer;
+    font-weight:700;
+    transition:transform .08s ease, box-shadow .2s ease, background .2s ease;
+    font-family: Dosis;
+    min-width: 120px;
+    font-size: 16px;
+    }
+  .btn:hover{box-shadow:none}
+    .btn:active{transform:translateY(1px)}
+    .btn:disabled{opacity:.6;cursor:not-allowed}
+
+    .btn.primary{
+    border:none;
+    color:#fff;
+    background:
+    linear-gradient(180deg, var(--brand), var(--brand));
+    }
+  .btn.primary:hover{box-shadow:none}
+    
+
+    @media (max-width: 860px){
+    .layout{grid-template-columns:1fr}
+    .aside{border-left:none;border-top:1px solid var(--muted)}
+    }
+
+    .hidden{
+      display: none !important;
+    }
+
+    .thankYouMsg{
+      color: var(--text);
+    }
+
+    .thankyou-header {
+      background: #8A9EFF;
+      color: #fff;
+      padding: 16px;
+      border-radius: 12px 12px 0 0;
+      text-align: center;
+    }
+    .thankyou-body {
+      text-align: center;
+      padding: 24px;
+    }
+    .thankyou-steps {
+      text-align: left;
+      max-width: 500px;
+      margin: 20px auto;
+      padding-left: 20px;
+      font-size: 16px;
+      color: #707598;
+    }
+    .thankyou-steps li {
+      margin: 12px 0;
+    }
+
+    /* Final screen redesign to match attached image */
+    .final-outer{
+      display:flex;align-items:center;justify-content:center;padding:40px 0;
+    }
+    .final-card{
+      background:var(--panel);border-radius:14px;max-width:920px;width:100%;text-align:center;
+    }
+    .final-icon{width:72px;height:72px;border-radius:50%;background:var(--brand);margin:0 auto 18px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:28px}
+    .final-title{font-family:Dosis;color:var(--text-strong);font-size:22px;margin:8px 0 24px}
+    .final-title .final-biz{color:var(--brand);font-weight:700}
+    .final-steps{background:#F0F4FF;border-radius:12px;padding:22px;margin:0 auto;max-width:740px;text-align:left;color:var(--text);}
+    .final-steps h3{color:var(--brand);margin:0 0 10px}
+    .final-steps ol{margin:8px 0 0;padding-left:18px}
+    .final-steps li{margin:10px 0}
+
+  /* Final call-to-action spacing and link reset */
+  .final-steps{margin-bottom:18px}
+  .final-cta{ text-align:center; padding:18px 0 28px; }
+  a.btn{ text-decoration:none; }
+
+    .support-section {
+      margin: 20px 0;
+    }
+
+    .support-section h4 {
+      font-family: Dosis;
+      color: var(--brand);
+      margin: 16px 0 8px 0;
+      font-size: 18px;
+    }
+
+    .support-section ul {
+      margin: 0 0 12px 20px;
+      color: var(--text);
+    }
+
+    .support-section ul li {
+      margin: 4px 0;
+      font-size: 14px;
+    }
+
+    .other-input-wrapper {
+      margin-top: 12px;
+    }
+
+    #overlayContent {
+      animation: fadeIn 0.3s ease forwards;
+      border-right: 5px solid var(--brand);
+      border-bottom: 5px solid var(--brand);
+    }
+
+    /* Accent highlight for dynamic values */
+    .accent { color: var(--accent); font-weight:700; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">Yoonet · General Intake</div>
+    <div class="header-nav">
+      <a href="#" class="form-switch" onclick="window.top.location.replace('intake_form_alliedhealth_corrected.html'); return false;">Allied Health Business?</a>
+    </div>
+  </header>
+  <div id="overlay" class="hidden" style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:1000;">
+  <div id="overlayContent" style="background:#fff;padding:24px 32px;border-radius:16px;max-width:400px;text-align:center;">
+    <p id="overlayMsg" style="margin:0;font-family:Dosis;color:var(--brand);font-size:18px;"></p>
+  </div>
+  </div>
+  <div class="layout">
+    <section class="card">
+      <div id="progress">Step 1 of 6</div>
+      <!-- Screens -->
+      <div class="screen" id="s1">
+        <h2>Thanks for your interest in Yoonet! What's your name?</h2>
+        <input id="firstName" type="text" placeholder="Full name">
+        <div class="nav"><span></span><button class="btn primary" onclick="goFirstName()">Continue</button></div>
+      </div>
+
+      <div class="screen hidden" id="s2">
+        <h2>What's your business name?</h2>
+        <input id="businessName" type="text" placeholder="Business name">
+        <div class="nav"><button class="btn ghost" onclick="back()">Back</button><button class="btn primary" onclick="goBusiness()">Continue</button></div>
+      </div>
+
+      <div class="screen hidden" id="s3">
+        <h2>What's your biggest challenge right now?</h2>
+        <textarea id="mainChallenge" placeholder="Describe your main administrative challenges..."></textarea>
+        <div class="nav"><button class="btn ghost" onclick="back()">Back</button><button class="btn primary" onclick="goChallenge()">Continue</button></div>
+      </div>
+
+      <div class="screen hidden" id="s4">
+        <h2>Which roles would help <span id="biz1"></span> most?</h2>
+        <p style="color: var(--muted); margin-bottom: 16px;">We'll match you with specialists in these areas (Select all that apply)</p>
+        <div id="supportOptions" class="options"></div>
+        <div id="otherSupportWrap" class="hidden other-input-wrapper">
+          <input id="otherSupport" type="text" placeholder="Please describe the specialist support you need">
+        </div>
+        <div class="nav"><button class="btn ghost" onclick="back()">Back</button><button class="btn primary" onclick="goSupport()">Continue</button></div>
+      </div>
+
+      <div class="screen hidden" id="s5">
+        <h2>Let's Connect!</h2>
+        <p style="color: var(--muted); margin-bottom: 16px;">We'll reach out within 24 hours with your custom proposal</p>
+        <label style="color: var(--text); display: block; margin: 16px 0 4px;">Your Name:</label>
+        <input id="fullName" type="text" placeholder="Full name">
+        <label style="color: var(--text); display: block; margin: 16px 0 4px;">Company Name:</label>
+        <input id="companyName" type="text" placeholder="Company name">
+        <label style="color: var(--text); display: block; margin: 16px 0 4px;">Email: *</label>
+        <input id="email" type="email" placeholder="Email address" required>
+        <div id="emailErr" class="error"></div>
+        <label style="color: var(--text); display: block; margin: 16px 0 4px;">Phone number:</label>
+        <input id="phone" type="tel" placeholder="Phone (optional)">
+        <div class="nav"><button class="btn ghost" onclick="back()">Back</button><button class="btn primary" onclick="submitForm()">Submit</button></div>
+      </div>
+
+      <div class="screen hidden" id="final">
+        <div class="final-outer">
+          <div class="final-card">
+            <div class="final-icon" aria-hidden="true"><span>✓</span></div>
+            <h2 class="final-title">We're excited about the opportunity to support <span class="final-biz"></span></h2>
+
+            <div class="final-steps">
+              <h3>Here’s what happen next</h3>
+              <ol>
+                <li><strong>Within 24 hours:</strong> Our specialist will review your needs</li>
+                <li><strong>Tailored proposal:</strong> You'll receive a custom solution for <span class="final-biz"></span></li>
+                <li><strong>No obligation:</strong> Review our proposal with no pressure to proceed</li>
+              </ol>
+            </div>
+            <div class="final-cta"> 
+              <a class="btn primary" href="#" onclick="window.top.replace('yoonet.io'); return false;">Visit Our Website</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <aside class="card" id="summary">
+      <h3>Lead Summary</h3>
+      <div id="summaryList"><div id="summaryItem">Waiting for input…</div></div>
+    </aside>
+  </div>
+
+<script>
+const route=[1,2,3,4,5]; let current=1; let historyStack=[1];
+const state={firstName:'',businessName:'',mainChallenge:'',supportNeeds:[],otherSupport:'',fullName:'',companyName:'',email:'',phone:''};
+
+function escapeHtml(str){
+  if(!str && str !== 0) return '';
+  return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function showScreen(n){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));
+  document.getElementById('s'+n).classList.remove('hidden');
+  current=n;
+  updateProgress(n);
+  refreshSummary();
+  updateBusinessNameRefs();
+}
+
+function updateProgress(n){
+  const idx=route.indexOf(n);
+  document.getElementById('progress').textContent=`Step ${idx+1} of ${route.length}`;
+}
+
+function next(n){
+  historyStack.push(n);
+  showScreen(n);
+}
+
+function back(){
+  if(historyStack.length>1){
+    historyStack.pop();
+    showScreen(historyStack.at(-1));
+  }
+}
+
+function updateBusinessNameRefs(){
+  const bizName = state.businessName || '';
+  const escaped = escapeHtml(bizName);
+  const wrapped = escaped ? `<span class=\"accent\">${escaped}</span>` : '';
+  const bizSpans = document.querySelectorAll('#biz1, #finalBizName');
+  bizSpans.forEach(span => span.innerHTML = wrapped || '');
+}
+
+function refreshSummary(){
+  const s=state;
+  const items=[];
+  const kv=document.getElementById('summaryList');
+
+  if(s.firstName) items.push(["First Name: ", s.firstName]);
+  if(s.businessName) items.push(["Business: ", s.businessName]);
+  if(s.mainChallenge) items.push(["Challenge: ", s.mainChallenge.substring(0,100) + (s.mainChallenge.length > 100 ? "..." : "")]);
+  if(s.supportNeeds.length) items.push(["Support Needs: ", s.supportNeeds.join(", ")]);
+  if(s.otherSupport) items.push(["Other Support: ", s.otherSupport]);
+  if(s.fullName && s.fullName !== s.firstName) items.push(["Full Name: ", s.fullName]);
+  if(s.email) items.push(["Email: ", s.email]);
+  if(s.phone) items.push(["Phone: ", s.phone]);
+
+  kv.innerHTML=items.length?items.map(([k,v])=>`<div id="summaryItem"><small>${k}</small><br>${escapeHtml(String(v))}</div>`).join(''):"<div id='summaryItem'>Waiting for input…</div>";
+}
+
+// Step 1 - First Name
+function goFirstName(){
+  const v=document.getElementById('firstName').value.trim();
+  if(!v) return;
+  state.firstName=v;
+  // Use the accent marker so the user's first name shows in the accent color
+  overlaySay(`Nice to meet you, {{accent:${v}}}`, ()=>next(2));
+}
+
+// Step 2 - Business Name
+function goBusiness(){
+  const v=document.getElementById('businessName').value.trim();
+  if(!v) return;
+  state.businessName=v;
+  // Pre-fill company name in step 5
+  document.getElementById('companyName').value = v;
+  state.companyName = v;
+  next(3);
+}
+
+// Step 3 - Main Challenge
+function goChallenge(){
+  const v=document.getElementById('mainChallenge').value.trim();
+  if(!v) return;
+  state.mainChallenge=v;
+  next(4);
+}
+
+// Step 4 - Support Needs
+const supportRoles = [
+  {
+    name: "Administrative Assistant",
+    details: ["Calendar management and scheduling", "Email management and correspondence", "Travel arrangements and bookings", "Document preparation and formatting", "Data entry and database management", "Meeting coordination and minutes"]
+  },
+  {
+    name: "Accounting & Bookkeeping Support",
+    details: ["Invoice processing and billing", "Accounts payable/receivable", "Expense tracking and reports", "Bank reconciliation", "Payroll preparation support", "Financial data entry"]
+  },
+  {
+    name: "Digital Marketing Assistant",
+    details: ["Social media content and scheduling", "Email marketing campaigns", "Website updates and maintenance", "Content writing and blog posts", "SEO optimisation support", "Marketing analytics and reporting"]
+  },
+  {
+    name: "Sales Support",
+    details: ["Lead generation and qualification", "CRM data management", "Sales follow-ups and outreach", "Proposal and quote preparation", "Customer onboarding", "Sales reporting and pipeline management"]
+  },
+  {
+    name: "Customer Service",
+    details: ["Customer enquiry responses", "Live chat support", "Order processing and tracking", "Complaint resolution", "FAQ and knowledge base updates", "Customer satisfaction surveys"]
+  },
+  {
+    name: "Executive Assistant",
+    details: ["Complex calendar management", "Board meeting preparation", "Confidential document handling", "Project coordination", "Research and reporting", "Stakeholder communication"]
+  },
+  {
+    name: "Other specialist support",
+    details: ["Please describe your specific needs"]
+  }
+];
+
+function buildSupportOptions(){
+  const container = document.getElementById('supportOptions');
+  container.innerHTML = '';
+
+  supportRoles.forEach(role => {
+    const div = document.createElement('div');
+    div.className = 'support-section';
+
+    const label = document.createElement('label');
+    label.innerHTML = `<input type="checkbox" value="${role.name}"> <strong>${role.name}</strong>`;
+
+    const detailsList = document.createElement('ul');
+    role.details.forEach(detail => {
+      const li = document.createElement('li');
+      li.textContent = detail;
+      detailsList.appendChild(li);
+    });
+
+    div.appendChild(label);
+    div.appendChild(detailsList);
+    container.appendChild(div);
+
+    // Attach change listener to the checkbox to toggle selected style on the support-section
+    const checkbox = label.querySelector('input[type="checkbox"]');
+    if(checkbox){
+      // add custom appearance class so our CSS produces a white checkmark where supported
+      checkbox.classList.add('custom-appearance');
+      checkbox.addEventListener('change', (ev) => {
+        div.classList.toggle('selected', checkbox.checked);
+      });
+    }
+  });
+
+  // Add event listener for "Other" option
+  container.addEventListener('change', e => {
+    const checked = [...document.querySelectorAll('#supportOptions input:checked')].map(i=>i.value);
+    document.getElementById('otherSupportWrap').classList.toggle('hidden', !checked.includes("Other specialist support"));
+  });
+}
+
+buildSupportOptions();
+
+function goSupport(){
+  let vals = [...document.querySelectorAll('#supportOptions input:checked')].map(i=>i.value);
+
+  if(vals.includes("Other specialist support")){
+    const other = document.getElementById('otherSupport').value.trim();
+    if(!other){
+      document.getElementById('otherSupport').style.borderColor='#d00';
+      return;
+    }
+    state.otherSupport = other;
+    document.getElementById('otherSupport').style.borderColor='';
+    vals = vals.filter(v => v !== "Other specialist support");
+    vals.push(`Other: ${other}`);
+  }
+
+  if(!vals.length) return;
+  state.supportNeeds = vals;
+
+  // Pre-fill full name in step 5
+  document.getElementById('fullName').value = state.firstName;
+  next(5);
+}
+
+// Step 5 - Contact Details & Submit
+const BUBBLE_ENDPOINT="https://yoospace.bubbleapps.io/version-42oea/api/1.1/wf/general_intake_form/";
+
+async function submitForm(){
+  const email = document.getElementById('email').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const fullName = document.getElementById('fullName').value.trim();
+  const companyName = document.getElementById('companyName').value.trim();
+
+  if(!/^[^@]+@[^@]+\.[^@]+$/.test(email)){
+    document.getElementById('emailErr').textContent="Please enter a valid email.";
+    return;
+  }
+
+  state.email = email;
+  state.phone = phone;
+  state.fullName = fullName || state.firstName;
+  state.companyName = companyName || state.businessName;
+
+  try{
+    await fetch(BUBBLE_ENDPOINT, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(state)
+    });
+  } catch(e){
+    console.error(e);
+  }
+
+  showFinal();
+}
+
+// Final Screen
+function showFinal(){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));
+  document.getElementById('final').classList.remove('hidden');
+
+  // hide the step progress when showing the final screen
+  const prog = document.getElementById('progress');
+  if(prog) prog.style.display = 'none';
+
+  const firstName = state.firstName || "there";
+  // Render highlighted first name (legacy header) and populate new final-biz placeholders
+  const headerEl = document.getElementById('thankYouHeader');
+  if(headerEl) headerEl.innerHTML = `Thank you, <span class="accent">${escapeHtml(firstName)}</span>!`;
+  const biz = state.businessName || 'your business';
+  const safeBiz = escapeHtml(biz);
+  // fill all .final-biz placeholders
+  document.querySelectorAll('.final-biz').forEach(el => el.textContent = biz === 'your business' ? safeBiz : safeBiz);
+
+  refreshSummary();
+}
+
+// Overlay Animation
+let overlayTimer = null;
+function overlaySay(msg, nextStep){
+  const overlay = document.getElementById('overlay');
+  // Allow msg to include already-escaped segments wrapped in <span class="accent">...
+  // Ensure we escape any plain text and preserve accent spans if present.
+  const overlayEl = document.getElementById('overlayMsg');
+  // If caller provided raw string, escape it. If it contains markers like {{accent:...}}, replace with span.
+  let processed = String(msg);
+  // Replace any {{accent:...}} occurrences with safe highlighted spans.
+    processed = processed.replace(/\{\{accent:(.*?)\}\}/g, (m, p1) => {
+    return `<span class=\"accent\">${escapeHtml(p1)}</span>`;
+  });
+  overlayEl.innerHTML = escapeHtml(processed).replace(/&lt;span class="accent"&gt;(.*?)&lt;\/span&gt;/g, '<span class="accent">$1</span>');
+  overlay.classList.remove('hidden');
+
+  if(overlayTimer) clearTimeout(overlayTimer);
+  overlayTimer = setTimeout(()=>{
+    overlay.classList.add('hidden');
+    if(nextStep) nextStep();
+  }, 2500);
+}
+
+// Initialize
+showScreen(1);
+
+</script>
+</body>
+</html>
