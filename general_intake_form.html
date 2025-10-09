@@ -25,9 +25,15 @@
       --shadow-md: 0 10px 30px rgba(31,41,55,.12);
     }
     *{box-sizing:border-box}
-    body{margin:0; background:var(--bg); font-family:Lato,sans-serif; color:#333;}
+    body{
+      margin:0;
+      background: linear-gradient(135deg, #f0f2f8 0%, #fafafc 50%, #f5f6fb 100%);
+      background-attachment: fixed;
+      font-family:Lato,sans-serif;
+      color:#333;
+    }
 
-    header{padding:16px 24px; background:var(--panel); border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;}
+    header{padding:16px 24px; background:var(--panel); border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; box-shadow:var(--shadow-sm);}
 
     .header-nav{display:flex; align-items:center; gap:16px;}
 
@@ -50,11 +56,11 @@
 
     #progress{font-size:16px; color:var(--muted);margin-bottom: 10px;}
 
-    .layout{display:grid; grid-template-columns:2fr 1fr; gap:24px; max-width:1100px; margin:24px auto; padding:0 16px;}
+    .layout{display:grid; grid-template-columns:1fr; gap:24px; max-width:1100px; margin:24px auto; padding:0 16px;}
 
-  .card{background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:24px; box-shadow:none;}
+  .card{background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:24px; box-shadow:var(--shadow-md);}
 
-    h2{font-family:Dosis; color:var(--accent); margin-top:0;}
+    h2{font-family:Dosis; color:var(--text-strong); margin-top:0;}
 
     .support-section{display:block; padding:12px; border:1px solid var(--border); border-radius:12px; margin:6px 0; cursor:pointer; color: var(--text); position: relative;}
 
@@ -121,7 +127,7 @@
     input[type=tel]:focus, textarea:focus{
       outline:none;
       border-color:var(--brand);
-  box-shadow:none
+      box-shadow:0 0 0 3px rgba(138,158,255,0.1), 0 2px 8px rgba(0,0,0,0.05);
     }
 
     textarea{resize:vertical; min-height:120px;}
@@ -132,7 +138,7 @@
 
     .hidden{display:none;}
 
-    .error{color:#d00; font-size:16px;}
+    .error{color:var(--accent); font-size:16px;}
 
     #summary h3{font-family:Dosis; color:var(--brand);}
 
@@ -162,9 +168,10 @@
     font-family: Dosis;
     min-width: 120px;
     font-size: 16px;
+    box-shadow:0 2px 4px rgba(0,0,0,0.04);
     }
-  .btn:hover{box-shadow:none}
-    .btn:active{transform:translateY(1px)}
+  .btn:hover{box-shadow:0 4px 12px rgba(0,0,0,0.1); transform:translateY(-1px);}
+    .btn:active{transform:translateY(1px); box-shadow:0 1px 2px rgba(0,0,0,0.04);}
     .btn:disabled{opacity:.6;cursor:not-allowed}
 
     .btn.primary{
@@ -172,8 +179,9 @@
     color:#fff;
     background:
     linear-gradient(180deg, var(--brand), var(--brand));
+    box-shadow:0 4px 12px rgba(138,158,255,0.3);
     }
-  .btn.primary:hover{box-shadow:none}
+  .btn.primary:hover{box-shadow:0 6px 20px rgba(138,158,255,0.4); transform:translateY(-1px);}
     
 
     @media (max-width: 860px){
@@ -270,7 +278,7 @@
 <body>
   <header>
     <div class="brand">Yoonet · General Intake</div>
-    <div class="header-nav">
+    <div class="header-nav" style="display:none;">
       <a href="#" class="form-switch" onclick="window.top.location.replace('intake_form_alliedhealth_corrected.html'); return false;">Allied Health Business?</a>
     </div>
   </header>
@@ -347,10 +355,6 @@
         </div>
       </div>
     </section>
-    <aside class="card" id="summary">
-      <h3>Lead Summary</h3>
-      <div id="summaryList"><div id="summaryItem">Waiting for input…</div></div>
-    </aside>
   </div>
 
 <script>
@@ -401,6 +405,11 @@ function refreshSummary(){
   const items=[];
   const kv=document.getElementById('summaryList');
 
+  if(!kv) {
+    updateBusinessNameRefs();
+    return;
+  }
+
   if(s.firstName) items.push(["First Name: ", s.firstName]);
   if(s.businessName) items.push(["Business: ", s.businessName]);
   if(s.mainChallenge) items.push(["Challenge: ", s.mainChallenge.substring(0,100) + (s.mainChallenge.length > 100 ? "..." : "")]);
@@ -418,8 +427,7 @@ function goFirstName(){
   const v=document.getElementById('firstName').value.trim();
   if(!v) return;
   state.firstName=v;
-  // Use the accent marker so the user's first name shows in the accent color
-  overlaySay(`Nice to meet you, {{accent:${v}}}`, ()=>next(2));
+  next(2);
 }
 
 // Step 2 - Business Name
