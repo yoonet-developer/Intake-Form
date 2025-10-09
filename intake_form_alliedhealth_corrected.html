@@ -79,7 +79,7 @@
       text-align: center;
     }
 
-    .layout{display:grid; grid-template-columns:2fr 1fr; gap:24px; max-width:1100px; margin:24px auto; padding:0 16px;}
+    .layout{display:grid; grid-template-columns:1fr; gap:24px; max-width:1100px; margin:24px auto; padding:0 16px;}
 
   .card{background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:24px; box-shadow:none;}
 
@@ -346,17 +346,17 @@
         <div id="modalityOptions" class="options"></div>
         <div id="multiModalWrap" class="hidden"><p>Select all that apply:</p><div id="multiModalOptions" class="options"></div></div>
         <div id="otherModalityWrap" class="hidden"><input id="otherModality" type="text" placeholder="Please specify"></div>
-        <div class="nav"><button class="btn ghost" onclick="back()">Back</button><button class="btn primary" onclick="goModality()">Continue</button></div>
+        <div class="nav"><button class="btn ghost" onclick="back()">Back</button><button class="btn primary hidden" id="continueModality" onclick="goModality()">Continue</button></div>
       </div>
       <div class="screen hidden" id="s4">
         <h2>How many practitioners work in your business?</h2>
         <div id="sizeOptions" class="options"></div>
-        <div class="nav"><button class="btn ghost" onclick="back()">Back</button><button class="btn primary" onclick="goSize()">Continue</button></div>
+        <div class="nav"><button class="btn ghost" onclick="back()">Back</button></div>
       </div>
       <div class="screen hidden" id="s5">
         <h2>How many full-time equivalents in administration support do you currently have?</h2>
         <div id="adminOptions" class="options"></div>
-        <div class="nav"><button class="btn ghost" onclick="back()">Back</button><button class="btn primary" onclick="goAdminSupport()">Continue</button></div>
+        <div class="nav"><button class="btn ghost" onclick="back()">Back</button></div>
       </div>
       <div class="screen hidden" id="s6">
         <h2>Where are you hoping we can help <span id="biz1"></span>?</h2>
@@ -367,13 +367,13 @@
       <div class="screen hidden" id="s7">
         <h2>Which practice management system does your clinic use?</h2>
         <div id="systemOptions" class="options"></div>
-        <div id="otherSystemWrap" class="hidden"><input id="otherSystem" type="text" placeholder="Please specify"></div>
-        <div class="nav"><button class="btn ghost" onclick="back()">Back</button><button class="btn primary" onclick="goSystem()">Continue</button></div>
+        <div id="otherSystemWrap" class="hidden"><input id="otherSystem" type="text" placeholder="Please specify (press Enter to continue)"></div>
+        <div class="nav"><button class="btn ghost" onclick="back()">Back</button><button class="btn primary hidden" id="continueSystem" onclick="goSystem()">Continue</button></div>
       </div>
       <div class="screen hidden" id="s8">
         <h2>When does <span id="biz2"></span> need support in place?</h2>
         <div id="urgencyOptions" class="options"></div>
-        <div class="nav"><button class="btn ghost" onclick="back()">Back</button><button class="btn primary" onclick="goUrgency()">Continue</button></div>
+        <div class="nav"><button class="btn ghost" onclick="back()">Back</button></div>
       </div>
       <div class="screen hidden" id="s9">
         <h2>Is there anything else you'd like us to know about <span id="biz3"></span>?</h2>
@@ -381,7 +381,7 @@
         <div class="nav"><button class="btn ghost" onclick="back()">Back</button><button class="btn primary" onclick="goAnything()">Continue</button></div>
       </div>
       <div class="screen hidden" id="s10">
-        <h2>We will come back to you via email with more information soon.</h2>
+        <h2>Thank you for your interest in working with us. We will come back to you shortly.</h2>
         <input id="email" type="email" placeholder="Email">
         <div id="emailErr" class="error"></div>
         <input id="phone" type="tel" placeholder="Phone (optional)">
@@ -408,10 +408,6 @@
         </div>
       </div>
     </section>
-    <aside class="card" id="summary">
-      <h3>Lead Summary</h3>
-      <div id="summaryList"><div id="summaryItem">Waiting for input…</div></div>
-    </aside>
   </div>
 
 <script>
@@ -429,6 +425,13 @@ function next(n){historyStack.push(n);showScreen(n);}function back(){if(historyS
 
 function refreshSummary(){
   const s=state;const items=[];const kv=document.getElementById('summaryList');
+
+  // Check if summary element exists (it was removed)
+  if(!kv) {
+    updateBusinessNameRefs();
+    return;
+  }
+
   if(s.name)items.push(["Name: ", s.name]);
   if(s.businessName)items.push(["Clinic: ", s.businessName]);
   if(s.modality)items.push(["Modality: ", s.modality+(s.multiModalities.length?" ("+s.multiModalities.join(", ")+")":"")]);
@@ -475,34 +478,59 @@ function buildChecks(container,opts){
   c.innerHTML='';
   opts.forEach(o=>{c.innerHTML+=`<label><input type="checkbox" value="${o}"> ${o}</label>`;});
 }
-buildRadios('modalityOptions',modalities,'modality');
-buildChecks('multiModalOptions',modalities.filter(m=>!["Multiple modalities","Other"].includes(m)));
+
 // Build radios with immediate toggle
 function setupModality(){
   buildRadios('modalityOptions', modalities, 'modality');
-  document.getElementById('modalityOptions').addEventListener('change', e=>{
-    const val = e.target.value;
-    document.getElementById('multiModalWrap').classList.add('hidden');
-    document.getElementById('otherModalityWrap').classList.add('hidden');
+  buildChecks('multiModalOptions',modalities.filter(m=>!["Multiple modalities","Other"].includes(m)));
 
-    if(val === "Multiple modalities"){
-      document.getElementById('multiModalWrap').classList.remove('hidden');
-    } else {
-      // If switching away from Multiple modalities, clear any previous multi selections
-      state.multiModalities = [];
-      // Uncheck all checkboxes in the multi modal options and remove .selected from labels
-      document.querySelectorAll('#multiModalOptions input[type="checkbox"]').forEach(cb => {
-        cb.checked = false;
-        const lab = cb.closest('label') || cb.parentElement;
-        if(lab) lab.classList.remove('selected');
-      });
-      // Ensure the multi modal wrap is hidden
-      document.getElementById('multiModalWrap').classList.add('hidden');
-      // Refresh summary to remove stale entries
-      refreshSummary();
-    }
-    if(val === "Other"){
-      document.getElementById('otherModalityWrap').classList.remove('hidden');
+  const continueBtn = document.getElementById('continueModality');
+
+  // Attach listeners directly to each radio button with click event
+  setTimeout(() => {
+    const radios = document.querySelectorAll('#modalityOptions input[type="radio"]');
+
+    radios.forEach(radio => {
+      radio.addEventListener('click', function(e) {
+        const val = this.value;
+        document.getElementById('multiModalWrap').classList.add('hidden');
+        document.getElementById('otherModalityWrap').classList.add('hidden');
+
+        if(val === "Multiple modalities"){
+          document.getElementById('multiModalWrap').classList.remove('hidden');
+          continueBtn.classList.remove('hidden');
+        } else if(val === "Other"){
+          document.getElementById('otherModalityWrap').classList.remove('hidden');
+          continueBtn.classList.remove('hidden');
+          // Focus on the text input
+          setTimeout(() => document.getElementById('otherModality').focus(), 100);
+        } else {
+          continueBtn.classList.add('hidden');
+          // If switching away from Multiple modalities, clear any previous multi selections
+          state.multiModalities = [];
+          // Uncheck all checkboxes in the multi modal options and remove .selected from labels
+          document.querySelectorAll('#multiModalOptions input[type="checkbox"]').forEach(cb => {
+            cb.checked = false;
+            const lab = cb.closest('label') || cb.parentElement;
+            if(lab) lab.classList.remove('selected');
+          });
+          // Ensure the multi modal wrap is hidden
+          document.getElementById('multiModalWrap').classList.add('hidden');
+          // Refresh summary to remove stale entries
+          refreshSummary();
+          // Auto-advance for simple selections
+          state.modality = val;
+          setTimeout(() => next(4), 400);
+        }
+      }, true); // Use capture phase
+    });
+  }, 100);
+
+  // Auto-advance when Enter is pressed in "Other" text field
+  document.getElementById('otherModality').addEventListener('keypress', e => {
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      goModality();
     }
   });
 }
@@ -526,14 +554,28 @@ function goModality(){
   } else if(val){ state.modality=val; next(4); }
 }
 // Step 4
-const sizes=["Solo practitioner","2-3 practitioners","4-6 practitioners","7-10 practitioners","More than 10 practitioners"];buildRadios('sizeOptions',sizes,'size');
+const sizes=["Solo practitioner","2-3 practitioners","4-6 practitioners","7-10 practitioners","More than 10 practitioners"];
+buildRadios('sizeOptions',sizes,'size');
+// Auto-advance for practice size
+setTimeout(() => {
+  document.getElementById('sizeOptions').addEventListener('change', () => {
+    setTimeout(() => goSize(), 400);
+  });
+}, 100);
 function goSize(){
   const v=document.querySelector('#sizeOptions input:checked')?.value;
   if(!v)return;state.practiceSize=v;
   next(5);
 }
 // Step 5
-const admins=["None at all","Less than 1 full-time","1 full-time","2-3 full-time","4+ full-time"];buildRadios('adminOptions',admins,'admin');
+const admins=["None at all","Less than 1 full-time","1 full-time","2-3 full-time","4+ full-time"];
+buildRadios('adminOptions',admins,'admin');
+// Auto-advance for admin support
+setTimeout(() => {
+  document.getElementById('adminOptions').addEventListener('change', () => {
+    setTimeout(() => goAdminSupport(), 400);
+  });
+}, 100);
 function goAdminSupport(){
   const v=document.querySelector('#adminOptions input:checked')?.value;
   if(!v)return;state.adminSupport=v;
@@ -568,12 +610,36 @@ function goNeeds(){
   next(7);
 }
 // Step 7
-const systems=["Cliniko","Nookal","Power Diary","Halaxy","CorePlus","Front Desk","TM3","Best Practice","Medical Director","No system currently","Other"];buildRadios('systemOptions',systems,'system');
+const systems=["Cliniko","Nookal","Power Diary","Halaxy","CorePlus","Front Desk","TM3","Best Practice","Medical Director","No system currently","Other"];
+buildRadios('systemOptions',systems,'system');
 function setupSystem(){
   buildRadios('systemOptions', systems, 'system');
+  const continueBtn = document.getElementById('continueSystem');
+
   document.getElementById('systemOptions').addEventListener('change', e=>{
     const val = e.target.value;
-    document.getElementById('otherSystemWrap').classList.toggle('hidden', val!=="Other");
+    if(val === "Other"){
+      document.getElementById('otherSystemWrap').classList.remove('hidden');
+      continueBtn.classList.remove('hidden');
+      // Focus on the text input
+      setTimeout(() => document.getElementById('otherSystem').focus(), 100);
+    } else {
+      document.getElementById('otherSystemWrap').classList.add('hidden');
+      continueBtn.classList.add('hidden');
+      // Auto-advance for non-Other selections
+      state.practiceSystem = val;
+      // Update business name in step 8
+      document.getElementById('biz2').textContent = state.businessName;
+      setTimeout(() => next(8), 400);
+    }
+  });
+
+  // Auto-advance when Enter is pressed in "Other" text field
+  document.getElementById('otherSystem').addEventListener('keypress', e => {
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      goSystem();
+    }
   });
 }
 setupSystem();
@@ -598,6 +664,12 @@ function goSystem(){
 // Step 8
 const urgency=["Within 2 weeks","Within a month","Next 1-3 months","Just planning ahead"];
 buildRadios('urgencyOptions',urgency,'urgency');
+// Auto-advance for urgency
+setTimeout(() => {
+  document.getElementById('urgencyOptions').addEventListener('change', () => {
+    setTimeout(() => goUrgency(), 400);
+  });
+}, 100);
 function goUrgency(){const v=document.querySelector('#urgencyOptions input:checked')?.value;
 if(!v)return;state.urgency=v;
 next(9);
