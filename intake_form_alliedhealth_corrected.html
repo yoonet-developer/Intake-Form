@@ -385,7 +385,16 @@
       <!-- Screens -->
       <div class="screen" id="s1">
         <h2>Thanks for your interest in Yoonet! What's your name?</h2>
-        <input id="name" type="text" placeholder="Full name">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px;">
+          <div>
+            <label style="color: var(--text-strong); font-size: 14px; display: block; margin-bottom: 4px;">First Name</label>
+            <input id="firstName" type="text" placeholder="First name" style="margin: 0;">
+          </div>
+          <div>
+            <label style="color: var(--text-strong); font-size: 14px; display: block; margin-bottom: 4px;">Last Name</label>
+            <input id="lastName" type="text" placeholder="Last name" style="margin: 0;">
+          </div>
+        </div>
         <div class="nav"><span></span><button class="btn primary" onclick="goName()">Continue</button></div>
       </div>
       <div class="screen hidden" id="s2">
@@ -475,7 +484,7 @@
 
 <script>
 const route=[1,2,3,4,5,6,7,8,9,10,11,12]; let current=1; let historyStack=[1];
-const state={name:'',businessName:'',modality:'',multiModalities:[],location:'',practiceSize:'',adminSupport:'',mainGoal:'',adminNeeds:[],practiceSystem:'',urgency:'',anythingElse:'',email:'',phone:''};
+const state={firstName:'',lastName:'',businessName:'',modality:'',multiModalities:[],location:'',practiceSize:'',adminSupport:'',mainGoal:'',adminNeeds:[],practiceSystem:'',urgency:'',anythingElse:'',email:'',phone:''};
 function escapeHtml(str){ return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 function showScreen(n){document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));document.getElementById('s'+n).classList.remove('hidden');current=n;updateProgress(n);refreshSummary();}
 function updateProgress(n){
@@ -495,7 +504,7 @@ function refreshSummary(){
     return;
   }
 
-  if(s.name)items.push(["Name: ", s.name]);
+  if(s.firstName && s.lastName)items.push(["Name: ", s.firstName + " " + s.lastName]);
   if(s.businessName)items.push(["Clinic: ", s.businessName]);
   if(s.modality)items.push(["Modality: ", s.modality+(s.multiModalities.length?" ("+s.multiModalities.join(", ")+")":"")]);
   if(s.location)items.push(["Location: ", s.location]);
@@ -515,11 +524,12 @@ function refreshSummary(){
   // kv.innerHTML=items.length?items.map(i=>`<div id="summaryitem">${i}</div>`).join(""):"<div id='summaryitem'>Waiting for input…</div>";}
 
 // Step 1
-// function goName(){const v=document.getElementById('name').value.trim();if(!v)return;state.name=v;next(2);}
 function goName(){
-  const v=document.getElementById('name').value.trim();
-  if(!v) return;
-  state.name=v;
+  const firstName = document.getElementById('firstName').value.trim();
+  const lastName = document.getElementById('lastName').value.trim();
+  if(!firstName || !lastName) return;
+  state.firstName = firstName;
+  state.lastName = lastName;
   next(2);
 }
 // Step 2
@@ -791,7 +801,7 @@ function goAnything(){
   next(12);
 }
 // Step 12 Submit
-const BUBBLE_ENDPOINT="https://app.yoonet.io/version-42oea/api/1.1/wf/intake_form_submitted/";
+const BUBBLE_ENDPOINT="https://yoospace.bubbleapps.io/version-42riu/api/1.1/wf/intake_form/";
 async function submitForm(){const email=document.getElementById('email').value.trim();const phone=document.getElementById('phone').value.trim();if(!/^[^@]+@[^@]+\.[^@]+$/.test(email)){document.getElementById('emailErr').textContent="Please enter a valid email.";return;}state.email=email;state.phone=phone;try{await fetch(BUBBLE_ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(state)});}catch(e){console.error(e);}showFinal();}
 // Final
 // function showFinal(){document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));document.getElementById('final').classList.remove('hidden');const first=state.name.split(" ")[0]||"there";document.getElementById('thankYouHeader').textContent=`Thank you, ${first}!`;document.getElementById('thankYouMsg').innerHTML=`We're excited to support ${state.businessName}.<br><br>1. <b>Within 1 business day:</b> Our specialist will review your needs<br>2. <b>Tailored proposal:</b> You'll receive a custom solution<br>3. <b>No obligation:</b> Review with no pressure to proceed`;refreshSummary();}
@@ -803,7 +813,7 @@ function showFinal(){
   // populate all final-biz placeholders
   document.querySelectorAll('.final-biz').forEach(el => el.textContent = biz === 'your clinic' ? safeBiz : safeBiz);
   // also set legacy thank you header for accessibility
-  const first=state.name.split(" ")[0]||"there";
+  const first = state.firstName || "there";
   const headerEl = document.getElementById('thankYouHeader');
   if(headerEl) headerEl.textContent = `Thank you, ${first}!`;
 
