@@ -54,7 +54,29 @@
 
     .brand{font-family:Dosis; font-size:20px; font-weight:700; color:var(--brand);}
 
-    #progress{font-size:16px; color:var(--muted);margin-bottom: 10px;}
+    #progress{margin-bottom: 20px;}
+
+    .progress-bar-container {
+      width: 100%;
+      height: 8px;
+      background: var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--brand), var(--accent));
+      border-radius: 10px;
+      transition: width 0.3s ease;
+    }
+
+    .progress-text {
+      font-size: 14px;
+      color: var(--muted);
+      margin-top: 8px;
+      text-align: center;
+    }
 
     .layout{display:grid; grid-template-columns:1fr; gap:24px; max-width:1100px; margin:24px auto; padding:0 16px;}
 
@@ -289,7 +311,12 @@
   </div>
   <div class="layout">
     <section class="card">
-      <div id="progress">Step 1 of 6</div>
+      <div id="progress">
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" id="progressBar" style="width: 16.67%"></div>
+        </div>
+        <div class="progress-text" id="progressText">Step 1 of 6</div>
+      </div>
       <!-- Screens -->
       <div class="screen" id="s1">
         <h2>Thanks for your interest in Yoonet! What's your name?</h2>
@@ -377,7 +404,9 @@ function showScreen(n){
 
 function updateProgress(n){
   const idx=route.indexOf(n);
-  document.getElementById('progress').textContent=`Step ${idx+1} of ${route.length}`;
+  const percentage = ((idx+1)/route.length)*100;
+  document.getElementById('progressBar').style.width = percentage + '%';
+  document.getElementById('progressText').textContent=`Step ${idx+1} of ${route.length}`;
 }
 
 function next(n){
@@ -547,7 +576,7 @@ function goSupport(){
 }
 
 // Step 5 - Contact Details & Submit
-const BUBBLE_ENDPOINT="https://yoospace.bubbleapps.io/version-42oea/api/1.1/wf/general_intake_form/";
+const BUBBLE_ENDPOINT="https://yoospace.bubbleapps.io/version-42riu/api/1.1/wf/intake_form_gen/";
 
 async function submitForm(){
   const email = document.getElementById('email').value.trim();
