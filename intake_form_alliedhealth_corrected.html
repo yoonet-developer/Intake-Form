@@ -588,7 +588,7 @@
 
 <script>
 const route=[1,2,3,4,5,6,7,8,9,10,11,12]; let current=1; let historyStack=[1];
-const state={firstName:'',lastName:'',businessName:'',modality:'',multiModalities:[],location:'',practiceSize:'',adminSupport:'',mainGoal:'',adminNeeds:[],practiceSystem:'',urgency:'',anythingElse:'',email:'',phone:''};
+const state={firstName:'',lastName:'',fullName:'',businessName:'',modality:'',multiModalities:[],location:'',practiceSize:'',adminSupport:'',mainGoal:'',adminNeeds:[],practiceSystem:'',urgency:'',anythingElse:'',email:'',phone:''};
 function escapeHtml(str){ return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 
 function showScreen(n){
@@ -619,6 +619,7 @@ function showScreen(n){
     if(yourNameField){
       const fullName = (state.firstName + ' ' + state.lastName).trim();
       yourNameField.value = fullName;
+      state.fullName = fullName;
     }
   }
 }
