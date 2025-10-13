@@ -295,6 +295,18 @@
 
     /* Accent highlight for dynamic values */
     .accent { color: var(--accent); font-weight:700; }
+
+    /* Read-only field styling */
+    input[readonly] {
+      background: #F0F4FF !important;
+      cursor: not-allowed;
+      color: var(--text-strong);
+    }
+
+    input[readonly]:focus {
+      border-color: var(--border) !important;
+      box-shadow: none !important;
+    }
   </style>
 </head>
 <body>
@@ -359,9 +371,9 @@
         <h2>Let's Connect!</h2>
         <p style="color: var(--muted); margin-bottom: 16px;">We'll reach out within 24 hours with your custom proposal</p>
         <label style="color: var(--text); display: block; margin: 16px 0 4px;">Your Name:</label>
-        <input id="fullName" type="text" placeholder="Full name">
+        <input id="fullName" type="text" placeholder="Full name" readonly>
         <label style="color: var(--text); display: block; margin: 16px 0 4px;">Company Name:</label>
-        <input id="companyName" type="text" placeholder="Company name">
+        <input id="companyName" type="text" placeholder="Company name" readonly>
         <label style="color: var(--text); display: block; margin: 16px 0 4px;">Email: *</label>
         <input id="email" type="email" placeholder="Email address" required>
         <div id="emailErr" class="error"></div>
@@ -586,7 +598,7 @@ function goSupport(){
 }
 
 // Step 5 - Contact Details & Submit
-const BUBBLE_ENDPOINT="https://yoospace.bubbleapps.io/version-42riu/api/1.1/wf/intake_form_gen/";
+const BUBBLE_ENDPOINT="https://yoospace.bubbleapps.io/version-42oea/api/1.1/wf/general_intake_form/";
 
 async function submitForm(){
   const email = document.getElementById('email').value.trim();
