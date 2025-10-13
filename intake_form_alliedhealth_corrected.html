@@ -61,7 +61,16 @@
 
     .brand{font-family:Dosis; font-size:20px; font-weight:700; color:var(--brand);}
 
-    #progress{margin-bottom: 20px;}
+    #progress, #progress2 {margin-bottom: 20px;}
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
 
     .progress-bar-container {
       width: 100%;
@@ -79,15 +88,20 @@
     }
 
     .progress-text {
-      font-size: 14px;
+      font-size: 12px;
       color: var(--muted);
-      margin-top: 8px;
-      text-align: center;
+      font-weight: 600;
     }
 
-    .layout{display:grid; grid-template-columns:1fr; gap:24px; max-width:1100px; margin:24px auto; padding:0 16px;}
+    .progress-percentage {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
 
-  .card{background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:24px; box-shadow:var(--shadow-md);}
+    .layout{display:grid; grid-template-columns:1fr; gap:24px; max-width:1200px; margin:24px auto; padding:0 16px;}
+
+  .card{background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:32px; box-shadow:var(--shadow-md);}
 
   h2{font-family:Dosis; color:var(--text-strong); margin-top:0;}
 
@@ -297,6 +311,18 @@
     /* Accent highlight for dynamic values */
     .accent { color: var(--accent); font-weight:700; }
 
+    /* Read-only field styling */
+    input[readonly] {
+      background: #F0F4FF !important;
+      cursor: not-allowed;
+      color: var(--text-strong);
+    }
+
+    input[readonly]:focus {
+      border-color: var(--border) !important;
+      box-shadow: none !important;
+    }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(-6px); }
       to { opacity: 1; transform: translateY(0); }
@@ -360,11 +386,64 @@
   .final-steps{margin-bottom:18px}
   .final-cta{ text-align:center; padding:18px 0 28px; }
   a.btn{ text-decoration:none; }
+
+  /* First screen centered styling - logo and text outside box */
+  .logo-brand-wrapper {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  .logo-brand-wrapper .logo-container {
+    margin-bottom: 8px;
+  }
+
+  .logo-brand-wrapper .logo-container img {
+    max-width: 180px;
+    height: auto;
+  }
+
+  .logo-brand-wrapper .brand-text {
+    font-family: Dosis, sans-serif;
+    font-size: 14px;
+    color: #333;
+    font-weight: 400;
+  }
+
+  /* Center the entire first step layout */
+  .step-1-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+  }
+
+  .step-1-container .card {
+    max-width: 700px;
+    width: 100%;
+  }
+
+  .step-1-container #progress {
+    max-width: 700px;
+    width: 100%;
+    margin-bottom: 16px;
+  }
+
+  /* Make Continue button expand */
+  #s1 .nav {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px;
+  }
+
+  #s1 .nav .btn.primary {
+    width: 100%;
+  }
   </style>
 </head>
 <body>
   <header>
-    <div class="brand">Yoonet · Allied Health Intake</div>
+    <div class="brand">Yoonet · Allied Health Enquiry</div>
     <div class="header-nav" style="display:none;">
       <a href="#" class="form-switch" onclick="window.top.location.replace('general_intake_form.html'); return false;">Not Allied Health Business?</a>
     </div>
@@ -375,19 +454,51 @@
   </div>
   </div>
   <div class="layout">
-    <section class="card">
-      <div id="progress">
-        <div class="progress-bar-container">
-          <div class="progress-bar-fill" id="progressBar" style="width: 10%"></div>
+    <div class="step-1-container" id="step1Container" style="display: none;">
+      <div class="logo-brand-wrapper">
+        <div class="logo-container">
+          <img src="Yoonet Logo 2024.svg" alt="Yoonet Logo">
         </div>
-        <div class="progress-text" id="progressText">Step 1 of 10</div>
+        <div class="brand-text">Allied Health Enquiry</div>
+      </div>
+      <div id="progress">
+        <div class="progress-header">
+          <span class="progress-text" id="progressText">Step 1 of 12</span>
+          <span class="progress-percentage" id="progressPercentage">8% Complete</span>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" id="progressBar" style="width: 8.33%"></div>
+        </div>
+      </div>
+      <section class="card">
+        <div class="screen" id="s1">
+          <h2>Thanks for your interest in Yoonet! What's your name?</h2>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px;">
+            <div>
+              <label style="color: var(--text-strong); font-size: 14px; display: block; margin-bottom: 4px;">First Name</label>
+              <input id="firstName" type="text" placeholder="First name" style="margin: 0;">
+            </div>
+            <div>
+              <label style="color: var(--text-strong); font-size: 14px; display: block; margin-bottom: 4px;">Last Name</label>
+              <input id="lastName" type="text" placeholder="Last name" style="margin: 0;">
+            </div>
+          </div>
+          <div class="nav"><button class="btn ghost" onclick="back()">Back</button><button class="btn primary" onclick="goName()">Continue</button></div>
+        </div>
+      </section>
+    </div>
+
+    <section class="card" id="otherStepsCard">
+      <div id="progress2">
+        <div class="progress-header">
+          <span class="progress-text" id="progressText2">Step 1 of 12</span>
+          <span class="progress-percentage" id="progressPercentage2">8% Complete</span>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" id="progressBar2" style="width: 8.33%"></div>
+        </div>
       </div>
       <!-- Screens -->
-      <div class="screen" id="s1">
-        <h2>Thanks for your interest in Yoonet! What's your name?</h2>
-        <input id="name" type="text" placeholder="Full name">
-        <div class="nav"><span></span><button class="btn primary" onclick="goName()">Continue</button></div>
-      </div>
       <div class="screen hidden" id="s2">
         <h2>What's your clinic's name?</h2>
         <input id="businessName" type="text" placeholder="Clinic name">
@@ -445,6 +556,8 @@
       </div>
       <div class="screen hidden" id="s12">
         <h2>Thank you for your interest in working with us. We will come back to you shortly.</h2>
+        <label style="color: var(--text-strong); font-size: 14px; display: block; margin-top: 4px;">Your Name</label>
+        <input id="yourName" type="text" readonly placeholder="Your name">
         <input id="email" type="email" placeholder="Email">
         <div id="emailErr" class="error"></div>
         <input id="phone" type="tel" placeholder="Phone (optional)">
@@ -475,14 +588,59 @@
 
 <script>
 const route=[1,2,3,4,5,6,7,8,9,10,11,12]; let current=1; let historyStack=[1];
-const state={name:'',businessName:'',modality:'',multiModalities:[],location:'',practiceSize:'',adminSupport:'',mainGoal:'',adminNeeds:[],practiceSystem:'',urgency:'',anythingElse:'',email:'',phone:''};
+const state={firstName:'',lastName:'',businessName:'',modality:'',multiModalities:[],location:'',practiceSize:'',adminSupport:'',mainGoal:'',adminNeeds:[],practiceSystem:'',urgency:'',anythingElse:'',email:'',phone:''};
 function escapeHtml(str){ return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
-function showScreen(n){document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));document.getElementById('s'+n).classList.remove('hidden');current=n;updateProgress(n);refreshSummary();}
+
+function showScreen(n){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));
+  document.getElementById('s'+n).classList.remove('hidden');
+  current=n;
+  updateProgress(n);
+  refreshSummary();
+
+  // Show/hide different containers for step 1 vs other steps
+  const header = document.querySelector('header');
+  const step1Container = document.getElementById('step1Container');
+  const otherStepsCard = document.getElementById('otherStepsCard');
+
+  if(n === 1){
+    if(header) header.style.display = 'none';
+    if(step1Container) step1Container.style.display = 'flex';
+    if(otherStepsCard) otherStepsCard.style.display = 'none';
+  } else {
+    if(header) header.style.display = 'flex';
+    if(step1Container) step1Container.style.display = 'none';
+    if(otherStepsCard) otherStepsCard.style.display = 'block';
+  }
+
+  // Pre-fill "Your Name" field on step 12
+  if(n === 12){
+    const yourNameField = document.getElementById('yourName');
+    if(yourNameField){
+      const fullName = (state.firstName + ' ' + state.lastName).trim();
+      yourNameField.value = fullName;
+    }
+  }
+}
+
 function updateProgress(n){
   const idx=route.indexOf(n);
   const percentage = ((idx+1)/route.length)*100;
-  document.getElementById('progressBar').style.width = percentage + '%';
-  document.getElementById('progressText').textContent=`Step ${idx+1} of ${route.length}`;
+
+  // Update both progress bars
+  const bar1 = document.getElementById('progressBar');
+  const bar2 = document.getElementById('progressBar2');
+  const text1 = document.getElementById('progressText');
+  const text2 = document.getElementById('progressText2');
+  const perc1 = document.getElementById('progressPercentage');
+  const perc2 = document.getElementById('progressPercentage2');
+
+  if(bar1) bar1.style.width = percentage + '%';
+  if(bar2) bar2.style.width = percentage + '%';
+  if(text1) text1.textContent=`Step ${idx+1} of ${route.length}`;
+  if(text2) text2.textContent=`Step ${idx+1} of ${route.length}`;
+  if(perc1) perc1.textContent=`${Math.round(percentage)}% Complete`;
+  if(perc2) perc2.textContent=`${Math.round(percentage)}% Complete`;
 }
 function next(n){historyStack.push(n);showScreen(n);}function back(){if(historyStack.length>1){historyStack.pop();showScreen(historyStack.at(-1));}}
 
@@ -495,7 +653,7 @@ function refreshSummary(){
     return;
   }
 
-  if(s.name)items.push(["Name: ", s.name]);
+  if(s.firstName || s.lastName)items.push(["Name: ", (s.firstName + ' ' + s.lastName).trim()]);
   if(s.businessName)items.push(["Clinic: ", s.businessName]);
   if(s.modality)items.push(["Modality: ", s.modality+(s.multiModalities.length?" ("+s.multiModalities.join(", ")+")":"")]);
   if(s.location)items.push(["Location: ", s.location]);
@@ -516,9 +674,11 @@ function refreshSummary(){
 
 // Step 1
 function goName(){
-  const v = document.getElementById('name').value.trim();
-  if(!v) return;
-  state.name = v;
+  const firstName = document.getElementById('firstName').value.trim();
+  const lastName = document.getElementById('lastName').value.trim();
+  if(!firstName || !lastName) return;
+  state.firstName = firstName;
+  state.lastName = lastName;
   next(2);
 }
 // Step 2
@@ -802,13 +962,15 @@ function showFinal(){
   // populate all final-biz placeholders
   document.querySelectorAll('.final-biz').forEach(el => el.textContent = biz === 'your clinic' ? safeBiz : safeBiz);
   // also set legacy thank you header for accessibility
-  const first = (state.name && state.name.split(" ")[0]) || "there";
+  const first = state.firstName || "there";
   const headerEl = document.getElementById('thankYouHeader');
   if(headerEl) headerEl.textContent = `Thank you, ${first}!`;
 
-  // hide the progress indicator while on the final screen
-  const prog = document.getElementById('progress');
-  if(prog) prog.style.display = 'none';
+  // hide both progress indicators while on the final screen
+  const prog1 = document.getElementById('progress');
+  const prog2 = document.getElementById('progress2');
+  if(prog1) prog1.style.display = 'none';
+  if(prog2) prog2.style.display = 'none';
 }
 
 // Update business name spans to include accent styling (safe)
