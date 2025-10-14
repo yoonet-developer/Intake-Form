@@ -373,7 +373,7 @@
       display:flex;align-items:center;justify-content:center;padding:40px 0;
     }
     .final-card{
-      background:var(--panel);border-radius:14px;max-width:920px;width:100%;text-align:center;box-shadow:var(--shadow-md);
+      background:var(--panel);border-radius:14px;max-width:920px;width:100%;text-align:center;
     }
     .final-icon{width:72px;height:72px;border-radius:50%;background:var(--brand);margin:0 auto 18px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:28px}
     .final-title{font-family:Dosis;color:var(--text-strong);font-size:22px;margin:8px 0 24px}
@@ -398,7 +398,7 @@
   }
 
   .logo-brand-wrapper .logo-container img {
-    max-width: 100px;
+    max-width: 40px;
     height: auto;
   }
 
@@ -414,17 +414,39 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     min-height: 80vh;
+    padding-top: 30px;
   }
 
   .step-1-container .card {
-    max-width: 700px;
+    max-width: 800px;
     width: 100%;
   }
 
   .step-1-container #progress {
-    max-width: 700px;
+    max-width: 800px;
+    width: 100%;
+    margin-bottom: 16px;
+  }
+
+  /* Styling for other steps container to match step 1 */
+  .step-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 80vh;
+    padding-top: 30px;
+  }
+
+  .step-container .card {
+    max-width: 800px;
+    width: 100%;
+  }
+
+  .step-container #progress2 {
+    max-width: 800px;
     width: 100%;
     margin-bottom: 16px;
   }
@@ -488,7 +510,13 @@
       </section>
     </div>
 
-    <section class="card" id="otherStepsCard">
+    <div class="step-container" id="otherStepsContainer">
+      <div class="logo-brand-wrapper">
+        <div class="logo-container">
+          <img src="Yoonet Logo 2024.svg" alt="Yoonet Logo">
+        </div>
+        <h1 class="brand-text">Allied Health Enquiry</h1>
+      </div>
       <div id="progress2">
         <div class="progress-header">
           <span class="progress-text" id="progressText2">Step 1 of 12</span>
@@ -498,6 +526,7 @@
           <div class="progress-bar-fill" id="progressBar2" style="width: 8.33%"></div>
         </div>
       </div>
+      <section class="card" id="otherStepsCard">
       <!-- Screens -->
       <div class="screen hidden" id="s2">
         <h2>What's your clinic's name?</h2>
@@ -583,7 +612,8 @@
           </div>
         </div>
       </div>
-    </section>
+      </section>
+    </div>
   </div>
 
 <script>
@@ -598,19 +628,26 @@ function showScreen(n){
   updateProgress(n);
   refreshSummary();
 
+  // Show logo/brand wrappers and progress bars (they may have been hidden on final screen)
+  document.querySelectorAll('.logo-brand-wrapper').forEach(el => el.style.display = 'block');
+  const prog = document.getElementById('progress');
+  const prog2 = document.getElementById('progress2');
+  if(prog) prog.style.display = 'block';
+  if(prog2) prog2.style.display = 'block';
+
   // Show/hide different containers for step 1 vs other steps
   const header = document.querySelector('header');
   const step1Container = document.getElementById('step1Container');
-  const otherStepsCard = document.getElementById('otherStepsCard');
+  const otherStepsContainer = document.getElementById('otherStepsContainer');
 
   if(n === 1){
     if(header) header.style.display = 'none';
     if(step1Container) step1Container.style.display = 'flex';
-    if(otherStepsCard) otherStepsCard.style.display = 'none';
+    if(otherStepsContainer) otherStepsContainer.style.display = 'none';
   } else {
-    if(header) header.style.display = 'flex';
+    if(header) header.style.display = 'none';
     if(step1Container) step1Container.style.display = 'none';
-    if(otherStepsCard) otherStepsCard.style.display = 'block';
+    if(otherStepsContainer) otherStepsContainer.style.display = 'flex';
   }
 
   // Pre-fill "Your Name" field on step 12
@@ -829,7 +866,6 @@ function buildGoalOptions(){
     const html = `
       <label>
         <input type="radio" name="goal" value="${g.value}">
-        <div class="goal-icon">${g.icon}</div>
         <div class="goal-text">
           <div class="goal-title">${g.title}</div>
           <div class="goal-subtitle">${g.subtitle}</div>
@@ -967,11 +1003,14 @@ function showFinal(){
   const headerEl = document.getElementById('thankYouHeader');
   if(headerEl) headerEl.textContent = `Thank you, ${first}!`;
 
-  // hide both progress indicators while on the final screen
+  // hide both progress indicators and logo/brand wrappers while on the final screen
   const prog1 = document.getElementById('progress');
   const prog2 = document.getElementById('progress2');
   if(prog1) prog1.style.display = 'none';
   if(prog2) prog2.style.display = 'none';
+
+  // Hide logo/brand wrappers
+  document.querySelectorAll('.logo-brand-wrapper').forEach(el => el.style.display = 'none');
 }
 
 // Update business name spans to include accent styling (safe)
