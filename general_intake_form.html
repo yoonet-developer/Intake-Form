@@ -176,6 +176,11 @@
 
     .error{color:var(--accent); font-size:16px;}
 
+    .field-error{
+      border-color: #FA6492 !important;
+      box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.1) !important;
+    }
+
     #summary h3{font-family:Dosis; color:var(--brand);}
 
     #summary {padding-left:20px; color:var(--text); font-size:16px;}
@@ -516,7 +521,7 @@
               </ol>
             </div>
             <div class="final-cta"> 
-              <a class="btn primary" href="#" onclick="window.top.replace('yoonet.io'); return false;">Visit Our Website</a>
+              <a class="btn primary" href="https://www.yoonet.io/">Visit Our Website</a>
             </div>
           </div>
         </div>
@@ -628,18 +633,53 @@ function refreshSummary(){
 
 // Step 1 - Name
 function goName(){
-  const firstName = document.getElementById('firstName').value.trim();
-  const lastName = document.getElementById('lastName').value.trim();
-  if(!firstName || !lastName) return;
+  const firstNameField = document.getElementById('firstName');
+  const lastNameField = document.getElementById('lastName');
+  const firstName = firstNameField.value.trim();
+  const lastName = lastNameField.value.trim();
+
+  // Clear previous errors
+  firstNameField.classList.remove('field-error');
+  lastNameField.classList.remove('field-error');
+
+  let hasError = false;
+  if(!firstName) {
+    firstNameField.classList.add('field-error');
+    hasError = true;
+  }
+  if(!lastName) {
+    lastNameField.classList.add('field-error');
+    hasError = true;
+  }
+
+  if(hasError) return;
+
   state.firstName = firstName;
   state.lastName = lastName;
   next(2);
 }
 
+// Remove error styling on input
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('input, textarea').forEach(field => {
+    field.addEventListener('input', () => {
+      field.classList.remove('field-error');
+    });
+  });
+});
+
 // Step 2 - Business Name
 function goBusiness(){
-  const v=document.getElementById('businessName').value.trim();
-  if(!v) return;
+  const field = document.getElementById('businessName');
+  const v = field.value.trim();
+
+  field.classList.remove('field-error');
+
+  if(!v) {
+    field.classList.add('field-error');
+    return;
+  }
+
   state.businessName=v;
   // Pre-fill company name in step 5
   document.getElementById('companyName').value = v;
@@ -649,8 +689,16 @@ function goBusiness(){
 
 // Step 3 - Main Challenge
 function goChallenge(){
-  const v=document.getElementById('mainChallenge').value.trim();
-  if(!v) return;
+  const field = document.getElementById('mainChallenge');
+  const v = field.value.trim();
+
+  field.classList.remove('field-error');
+
+  if(!v) {
+    field.classList.add('field-error');
+    return;
+  }
+
   state.mainChallenge=v;
   next(4);
 }
@@ -756,12 +804,17 @@ function goSupport(){
 const BUBBLE_ENDPOINT="https://yoospace.bubbleapps.io/version-42oea/api/1.1/wf/general_intake_form/";
 
 async function submitForm(){
-  const email = document.getElementById('email').value.trim();
+  const emailField = document.getElementById('email');
+  const email = emailField.value.trim();
   const phone = document.getElementById('phone').value.trim();
   const fullName = document.getElementById('fullName').value.trim();
   const companyName = document.getElementById('companyName').value.trim();
 
+  emailField.classList.remove('field-error');
+  document.getElementById('emailErr').textContent = '';
+
   if(!/^[^@]+@[^@]+\.[^@]+$/.test(email)){
+    emailField.classList.add('field-error');
     document.getElementById('emailErr').textContent="Please enter a valid email.";
     return;
   }

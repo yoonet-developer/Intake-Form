@@ -186,6 +186,11 @@
 
     .error{color:var(--accent); font-size:16px;}
 
+    .field-error{
+      border-color: #ff6b9d !important;
+      box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.1) !important;
+    }
+
     #summary h3{font-family:Dosis; color:var(--brand);}
 
     #summary {padding-left:20px; color:var(--text); font-size:16px;}
@@ -712,18 +717,53 @@ function refreshSummary(){
 
 // Step 1
 function goName(){
-  const firstName = document.getElementById('firstName').value.trim();
-  const lastName = document.getElementById('lastName').value.trim();
-  if(!firstName || !lastName) return;
+  const firstNameField = document.getElementById('firstName');
+  const lastNameField = document.getElementById('lastName');
+  const firstName = firstNameField.value.trim();
+  const lastName = lastNameField.value.trim();
+
+  // Clear previous errors
+  firstNameField.classList.remove('field-error');
+  lastNameField.classList.remove('field-error');
+
+  let hasError = false;
+  if(!firstName) {
+    firstNameField.classList.add('field-error');
+    hasError = true;
+  }
+  if(!lastName) {
+    lastNameField.classList.add('field-error');
+    hasError = true;
+  }
+
+  if(hasError) return;
+
   state.firstName = firstName;
   state.lastName = lastName;
   next(2);
 }
+
+// Remove error styling on input
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('input, textarea').forEach(field => {
+    field.addEventListener('input', () => {
+      field.classList.remove('field-error');
+    });
+  });
+});
 // Step 2
 // function goBusiness(){const v=document.getElementById('businessName').value.trim();if(!v)return;state.businessName=v;next(3);refreshSummary();}
 function goBusiness(){
-  const v=document.getElementById('businessName').value.trim();
-  if(!v) return;
+  const field = document.getElementById('businessName');
+  const v = field.value.trim();
+
+  field.classList.remove('field-error');
+
+  if(!v) {
+    field.classList.add('field-error');
+    return;
+  }
+
   state.businessName=v;
   next(3);
   refreshSummary();
@@ -817,8 +857,16 @@ function goModality(){
 }
 // Step 4 - Location
 function goLocation(){
-  const v=document.getElementById('location').value.trim();
-  if(!v)return;
+  const field = document.getElementById('location');
+  const v = field.value.trim();
+
+  field.classList.remove('field-error');
+
+  if(!v) {
+    field.classList.add('field-error');
+    return;
+  }
+
   state.location=v;
   next(5);
 }
@@ -988,7 +1036,31 @@ function goAnything(){
 }
 // Step 12 Submit
 const BUBBLE_ENDPOINT="https://yoospace.bubbleapps.io/version-42oea/api/1.1/wf/intake_form_submitted/";
-async function submitForm(){const email=document.getElementById('email').value.trim();const phone=document.getElementById('phone').value.trim();if(!/^[^@]+@[^@]+\.[^@]+$/.test(email)){document.getElementById('emailErr').textContent="Please enter a valid email.";return;}state.email=email;state.phone=phone;try{await fetch(BUBBLE_ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(state)});}catch(e){console.error(e);}showFinal();}
+async function submitForm(){
+  const emailField = document.getElementById('email');
+  const email = emailField.value.trim();
+  const phone = document.getElementById('phone').value.trim();
+
+  emailField.classList.remove('field-error');
+  document.getElementById('emailErr').textContent = '';
+
+  if(!/^[^@]+@[^@]+\.[^@]+$/.test(email)){
+    emailField.classList.add('field-error');
+    document.getElementById('emailErr').textContent="Please enter a valid email.";
+    return;
+  }
+
+  state.email=email;
+  state.phone=phone;
+
+  try{
+    await fetch(BUBBLE_ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(state)});
+  }catch(e){
+    console.error(e);
+  }
+
+  showFinal();
+}
 // Final
 // function showFinal(){document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));document.getElementById('final').classList.remove('hidden');const first=state.name.split(" ")[0]||"there";document.getElementById('thankYouHeader').textContent=`Thank you, ${first}!`;document.getElementById('thankYouMsg').innerHTML=`We're excited to support ${state.businessName}.<br><br>1. <b>Within 1 business day:</b> Our specialist will review your needs<br>2. <b>Tailored proposal:</b> You'll receive a custom solution<br>3. <b>No obligation:</b> Review with no pressure to proceed`;refreshSummary();}
 function showFinal(){
