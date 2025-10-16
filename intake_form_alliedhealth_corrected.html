@@ -191,6 +191,13 @@
       box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.1) !important;
     }
 
+    .options.field-error{
+      border: 2px solid #ff6b9d;
+      border-radius: 12px;
+      padding: 12px;
+      background: rgba(255, 107, 157, 0.05);
+    }
+
     #summary h3{font-family:Dosis; color:var(--brand);}
 
     #summary {padding-left:20px; color:var(--text); font-size:16px;}
@@ -456,16 +463,6 @@
     margin-bottom: 16px;
   }
 
-  /* Make Continue button expand */
-  #s1 .nav {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 12px;
-  }
-
-  #s1 .nav .btn.primary {
-    width: 100%;
-  }
   </style>
 </head>
 <body>
@@ -543,7 +540,7 @@
         <div id="modalityOptions" class="options"></div>
         <div id="multiModalWrap" class="hidden"><p>Select all that apply:</p><div id="multiModalOptions" class="options"></div></div>
         <div id="otherModalityWrap" class="hidden"><input id="otherModality" type="text" placeholder="Please specify"></div>
-        <div class="nav"><button class="btn ghost" onclick="back()">Back</button><button class="btn primary hidden" id="continueModality" onclick="goModality()">Continue</button></div>
+        <div class="nav"><button class="btn ghost" onclick="back()">Back</button><button class="btn primary" id="continueModality" onclick="goModality()">Continue</button></div>
       </div>
       <div class="screen hidden" id="s4">
         <h2>Where are you located?</h2>
@@ -554,17 +551,17 @@
       <div class="screen hidden" id="s5">
         <h2>How many practitioners work in your business?</h2>
         <div id="sizeOptions" class="options"></div>
-        <div class="nav"><button class="btn ghost" onclick="back()">Back</button></div>
+        <div class="nav"><button class="btn ghost" onclick="back()">Back</button><button class="btn primary" onclick="goSize()">Continue</button></div>
       </div>
       <div class="screen hidden" id="s6">
         <h2>How many full-time equivalents in administration support do you currently have?</h2>
         <div id="adminOptions" class="options"></div>
-        <div class="nav"><button class="btn ghost" onclick="back()">Back</button></div>
+        <div class="nav"><button class="btn ghost" onclick="back()">Back</button><button class="btn primary" onclick="goAdminSupport()">Continue</button></div>
       </div>
       <div class="screen hidden" id="s7">
         <h2>What's your main goal?</h2>
         <div id="goalOptions" class="options"></div>
-        <div class="nav"><button class="btn ghost" onclick="back()">Back</button></div>
+        <div class="nav"><button class="btn ghost" onclick="back()">Back</button><button class="btn primary" onclick="goMainGoal()">Continue</button></div>
       </div>
       <div class="screen hidden" id="s8">
         <h2>Where are you hoping we can help <span id="biz1"></span>?</h2>
@@ -576,12 +573,12 @@
         <h2>Which practice management system does your clinic use?</h2>
         <div id="systemOptions" class="options"></div>
         <div id="otherSystemWrap" class="hidden"><input id="otherSystem" type="text" placeholder="Please specify (press Enter to continue)"></div>
-        <div class="nav"><button class="btn ghost" onclick="back()">Back</button><button class="btn primary hidden" id="continueSystem" onclick="goSystem()">Continue</button></div>
+        <div class="nav"><button class="btn ghost" onclick="back()">Back</button><button class="btn primary" id="continueSystem" onclick="goSystem()">Continue</button></div>
       </div>
       <div class="screen hidden" id="s10">
         <h2>When does <span id="biz2"></span> need support in place?</h2>
         <div id="urgencyOptions" class="options"></div>
-        <div class="nav"><button class="btn ghost" onclick="back()">Back</button></div>
+        <div class="nav"><button class="btn ghost" onclick="back()">Back</button><button class="btn primary" onclick="goUrgency()">Continue</button></div>
       </div>
       <div class="screen hidden" id="s11">
         <h2>Is there anything else you'd like us to know about <span id="biz3"></span>?</h2>
@@ -589,7 +586,7 @@
         <div class="nav"><button class="btn ghost" onclick="back()">Back</button><button class="btn primary" onclick="goAnything()">Continue</button></div>
       </div>
       <div class="screen hidden" id="s12">
-        <h2>Thank you for your interest in working with us. We will come back to you shortly.</h2>
+        <h2>Please enter how we can get back to you soon.</h2>
         <label style="color: var(--text-strong); font-size: 14px; display: block; margin-top: 4px;">Your Name</label>
         <input id="yourName" type="text" readonly placeholder="Your name">
         <input id="email" type="email" placeholder="Email">
@@ -795,19 +792,17 @@ function setupModality(){
     radios.forEach(radio => {
       radio.addEventListener('click', function(e) {
         const val = this.value;
+        document.getElementById('modalityOptions').classList.remove('field-error');
         document.getElementById('multiModalWrap').classList.add('hidden');
         document.getElementById('otherModalityWrap').classList.add('hidden');
 
         if(val === "Multiple modalities"){
           document.getElementById('multiModalWrap').classList.remove('hidden');
-          continueBtn.classList.remove('hidden');
         } else if(val === "Other"){
           document.getElementById('otherModalityWrap').classList.remove('hidden');
-          continueBtn.classList.remove('hidden');
           // Focus on the text input
           setTimeout(() => document.getElementById('otherModality').focus(), 100);
         } else {
-          continueBtn.classList.add('hidden');
           // If switching away from Multiple modalities, clear any previous multi selections
           state.multiModalities = [];
           // Uncheck all checkboxes in the multi modal options and remove .selected from labels
@@ -835,14 +830,35 @@ function setupModality(){
       goModality();
     }
   });
+
+  // Clear error when user selects a checkbox in multi-modal options
+  document.getElementById('multiModalOptions').addEventListener('change', () => {
+    document.getElementById('multiModalOptions').classList.remove('field-error');
+  });
 }
 setupModality();
 
 function goModality(){
   const val=document.querySelector('#modalityOptions input:checked')?.value;
+  const modalityContainer = document.getElementById('modalityOptions');
+
+  if(!val) {
+    modalityContainer.classList.add('field-error');
+    return;
+  }
+
+  modalityContainer.classList.remove('field-error');
+
   if(val==="Multiple modalities"){
     const picks=[...document.querySelectorAll('#multiModalOptions input:checked')].map(i=>i.value);
-    if(!picks.length) return;
+    const multiModalContainer = document.getElementById('multiModalOptions');
+
+    if(!picks.length) {
+      multiModalContainer.classList.add('field-error');
+      return;
+    }
+
+    multiModalContainer.classList.remove('field-error');
     state.modality="Multiple modalities"; state.multiModalities=picks; next(4);
   } else if(val==="Other"){
     const other=document.getElementById('otherModality').value.trim();
@@ -853,7 +869,7 @@ function goModality(){
     state.modality=other;
     document.getElementById('otherModality').style.borderColor='';
     next(4);
-  } else if(val){ state.modality=val; next(4); }
+  } else { state.modality=val; next(4); }
 }
 // Step 4 - Location
 function goLocation(){
@@ -876,12 +892,21 @@ buildRadios('sizeOptions',sizes,'size');
 // Auto-advance for practice size
 setTimeout(() => {
   document.getElementById('sizeOptions').addEventListener('change', () => {
+    document.getElementById('sizeOptions').classList.remove('field-error');
     setTimeout(() => goSize(), 400);
   });
 }, 100);
 function goSize(){
   const v=document.querySelector('#sizeOptions input:checked')?.value;
-  if(!v)return;state.practiceSize=v;
+  const container = document.getElementById('sizeOptions');
+
+  if(!v) {
+    container.classList.add('field-error');
+    return;
+  }
+
+  container.classList.remove('field-error');
+  state.practiceSize=v;
   next(6);
 }
 // Step 6 - Admin Support
@@ -890,12 +915,21 @@ buildRadios('adminOptions',admins,'admin');
 // Auto-advance for admin support
 setTimeout(() => {
   document.getElementById('adminOptions').addEventListener('change', () => {
+    document.getElementById('adminOptions').classList.remove('field-error');
     setTimeout(() => goAdminSupport(), 400);
   });
 }, 100);
 function goAdminSupport(){
   const v=document.querySelector('#adminOptions input:checked')?.value;
-  if(!v)return;state.adminSupport=v;
+  const container = document.getElementById('adminOptions');
+
+  if(!v) {
+    container.classList.add('field-error');
+    return;
+  }
+
+  container.classList.remove('field-error');
+  state.adminSupport=v;
   next(7);
 }
 // Step 7 - Main Goal
@@ -928,12 +962,21 @@ buildGoalOptions();
 // Auto-advance for main goal
 setTimeout(() => {
   document.getElementById('goalOptions').addEventListener('change', () => {
+    document.getElementById('goalOptions').classList.remove('field-error');
     setTimeout(() => goMainGoal(), 400);
   });
 }, 100);
 function goMainGoal(){
   const v=document.querySelector('#goalOptions input:checked')?.value;
-  if(!v)return;state.mainGoal=v;
+  const container = document.getElementById('goalOptions');
+
+  if(!v) {
+    container.classList.add('field-error');
+    return;
+  }
+
+  container.classList.remove('field-error');
+  state.mainGoal=v;
   next(8);
 }
 // Step 8
@@ -944,11 +987,16 @@ function setupNeeds(){
   document.getElementById('needsOptions').addEventListener('change', ()=>{
     const checked = [...document.querySelectorAll('#needsOptions input:checked')].map(i=>i.value);
     document.getElementById('otherNeedWrap').classList.toggle('hidden', !checked.includes("Other"));
+
+    // Clear error when user selects a checkbox
+    document.getElementById('needsOptions').classList.remove('field-error');
   });
 }
 setupNeeds();
 function goNeeds(){
   let vals=[...document.querySelectorAll('#needsOptions input:checked')].map(i=>i.value);
+  const needsContainer = document.getElementById('needsOptions');
+
   if(vals.includes("Other")){
     document.getElementById('otherNeedWrap').classList.remove('hidden');
     const other=document.getElementById('otherNeed').value.trim();
@@ -960,7 +1008,14 @@ function goNeeds(){
       vals.push(other);
       document.getElementById('otherNeed').style.borderColor='';
     }
-  }if(!vals.length)return;
+  }
+
+  if(!vals.length) {
+    needsContainer.classList.add('field-error');
+    return;
+  }
+
+  needsContainer.classList.remove('field-error');
   state.adminNeeds=vals;
   next(9);
 }
@@ -973,14 +1028,14 @@ function setupSystem(){
 
   document.getElementById('systemOptions').addEventListener('change', e=>{
     const val = e.target.value;
+    document.getElementById('systemOptions').classList.remove('field-error');
+
     if(val === "Other"){
       document.getElementById('otherSystemWrap').classList.remove('hidden');
-      continueBtn.classList.remove('hidden');
       // Focus on the text input
       setTimeout(() => document.getElementById('otherSystem').focus(), 100);
     } else {
       document.getElementById('otherSystemWrap').classList.add('hidden');
-      continueBtn.classList.add('hidden');
       // Auto-advance for non-Other selections
       state.practiceSystem = val;
       // Update business name in step 10
@@ -1000,6 +1055,8 @@ function setupSystem(){
 setupSystem();
 function goSystem(){
   let val=document.querySelector('#systemOptions input:checked')?.value;
+  const container = document.getElementById('systemOptions');
+
   if(val==="Other"){
     document.getElementById('otherSystemWrap').classList.remove('hidden');
     const other=document.getElementById('otherSystem').value.trim();
@@ -1011,8 +1068,12 @@ function goSystem(){
     document.getElementById('otherSystem').style.borderColor='';
   }else if(val){
     state.practiceSystem=val;
-  }else return;
+  }else {
+    container.classList.add('field-error');
+    return;
+  }
 
+  container.classList.remove('field-error');
   // Update business name in step 10
   document.getElementById('biz2').textContent = state.businessName;
   next(10);}
@@ -1022,12 +1083,22 @@ buildRadios('urgencyOptions',urgency,'urgency');
 // Auto-advance for urgency
 setTimeout(() => {
   document.getElementById('urgencyOptions').addEventListener('change', () => {
+    document.getElementById('urgencyOptions').classList.remove('field-error');
     setTimeout(() => goUrgency(), 400);
   });
 }, 100);
-function goUrgency(){const v=document.querySelector('#urgencyOptions input:checked')?.value;
-if(!v)return;state.urgency=v;
-next(11);
+function goUrgency(){
+  const v=document.querySelector('#urgencyOptions input:checked')?.value;
+  const container = document.getElementById('urgencyOptions');
+
+  if(!v) {
+    container.classList.add('field-error');
+    return;
+  }
+
+  container.classList.remove('field-error');
+  state.urgency=v;
+  next(11);
 }
 // Step 11
 function goAnything(){
